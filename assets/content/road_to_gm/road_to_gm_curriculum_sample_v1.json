@@ -1,0 +1,3883 @@
+{
+  "id": "road_to_gm_v1",
+  "title": "Road to GM",
+  "subtitle": "Asset-backed curriculum scaffold",
+  "description": "Sample Road to GM curriculum pack for schema, loader, progression, and UI wiring. Final handcrafted chess content is intentionally deferred.",
+  "contentPackId": "road_to_gm_curriculum_sample_v1",
+  "contentVersion": 2,
+  "reportedMiniGameTotal": 52,
+  "contentBoundary": {
+    "stopAtLastAvailableNode": true,
+    "lastStageId": "stage_8_gm_integration",
+    "lastLevelId": "stage_8_graduation_gate",
+    "reportedAvailableStageCount": 8,
+    "reportedAvailableLevelCount": 60
+  },
+  "rewards": [
+    {
+      "id": "reward_stage_1_clear",
+      "title": "Stage 1 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 1: Board Vision.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_1_board_vision",
+        "stageBand": "stage1",
+        "unlocksNextStage": true
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "reward_stage_2_clear",
+      "title": "Stage 2 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 2: Forcing Moves.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_2_forcing_moves",
+        "stageBand": "stage2",
+        "unlocksNextStage": true
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "reward_stage_3_clear",
+      "title": "Stage 3 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 3: Tactical Patterns.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_3_tactical_patterns",
+        "stageBand": "stage3",
+        "unlocksNextStage": true
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "reward_stage_4_clear",
+      "title": "Stage 4 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 4: Opening Discipline.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_4_opening_discipline",
+        "stageBand": "stage4",
+        "unlocksNextStage": true
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "reward_stage_5_clear",
+      "title": "Stage 5 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 5: Middlegame Plans.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_5_middlegame_plans",
+        "stageBand": "stage5",
+        "unlocksNextStage": true
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "reward_stage_6_clear",
+      "title": "Stage 6 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 6: Endgame Essentials.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_6_endgame_essentials",
+        "stageBand": "stage6",
+        "unlocksNextStage": true
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "reward_stage_7_clear",
+      "title": "Stage 7 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 7: Practical Mastery.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_7_practical_mastery",
+        "stageBand": "stage7",
+        "unlocksNextStage": true
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "reward_stage_8_clear",
+      "title": "Stage 8 Clear Trophy",
+      "summary": "Placeholder reward hook awarded after clearing Stage 8: GM Integration.",
+      "type": "trophy",
+      "payload": {
+        "stageId": "stage_8_gm_integration",
+        "stageBand": "stage8",
+        "unlocksNextStage": false
+      },
+      "sampleOnly": true
+    }
+  ],
+  "milestones": [
+    {
+      "id": "milestone_stage_1_clear",
+      "title": "Stage 1 Graduate",
+      "summary": "Placeholder milestone hook for Stage 1: Board Vision.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_1_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "milestone_stage_2_clear",
+      "title": "Stage 2 Graduate",
+      "summary": "Placeholder milestone hook for Stage 2: Forcing Moves.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_2_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "milestone_stage_3_clear",
+      "title": "Stage 3 Graduate",
+      "summary": "Placeholder milestone hook for Stage 3: Tactical Patterns.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_3_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "milestone_stage_4_clear",
+      "title": "Stage 4 Graduate",
+      "summary": "Placeholder milestone hook for Stage 4: Opening Discipline.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_4_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "milestone_stage_5_clear",
+      "title": "Stage 5 Graduate",
+      "summary": "Placeholder milestone hook for Stage 5: Middlegame Plans.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_5_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "milestone_stage_6_clear",
+      "title": "Stage 6 Graduate",
+      "summary": "Placeholder milestone hook for Stage 6: Endgame Essentials.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_6_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "milestone_stage_7_clear",
+      "title": "Stage 7 Graduate",
+      "summary": "Placeholder milestone hook for Stage 7: Practical Mastery.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_7_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "milestone_stage_8_clear",
+      "title": "Stage 8 Graduate",
+      "summary": "Placeholder milestone hook for Stage 8: GM Integration.",
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_8_graduation_gate"
+        }
+      ],
+      "sampleOnly": true
+    }
+  ],
+  "progressChecks": [
+    {
+      "id": "progressCheck_stage_1_clear",
+      "title": "Stage 1 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 1: Board Vision.",
+      "stageBand": "stage1",
+      "difficulty": "beginner",
+      "milestoneId": "milestone_stage_1_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_1_board_vision"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_1_clear",
+          "title": "Stage 1 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "progressCheck_stage_2_clear",
+      "title": "Stage 2 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 2: Forcing Moves.",
+      "stageBand": "stage2",
+      "difficulty": "beginner",
+      "milestoneId": "milestone_stage_2_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_2_forcing_moves"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_2_clear",
+          "title": "Stage 2 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "progressCheck_stage_3_clear",
+      "title": "Stage 3 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 3: Tactical Patterns.",
+      "stageBand": "stage3",
+      "difficulty": "intermediate",
+      "milestoneId": "milestone_stage_3_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_3_tactical_patterns"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_3_clear",
+          "title": "Stage 3 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "progressCheck_stage_4_clear",
+      "title": "Stage 4 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 4: Opening Discipline.",
+      "stageBand": "stage4",
+      "difficulty": "intermediate",
+      "milestoneId": "milestone_stage_4_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_4_opening_discipline"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_4_clear",
+          "title": "Stage 4 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "progressCheck_stage_5_clear",
+      "title": "Stage 5 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 5: Middlegame Plans.",
+      "stageBand": "stage5",
+      "difficulty": "advanced",
+      "milestoneId": "milestone_stage_5_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_5_middlegame_plans"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_5_clear",
+          "title": "Stage 5 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "progressCheck_stage_6_clear",
+      "title": "Stage 6 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 6: Endgame Essentials.",
+      "stageBand": "stage6",
+      "difficulty": "advanced",
+      "milestoneId": "milestone_stage_6_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_6_endgame_essentials"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_6_clear",
+          "title": "Stage 6 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "progressCheck_stage_7_clear",
+      "title": "Stage 7 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 7: Practical Mastery.",
+      "stageBand": "stage7",
+      "difficulty": "elite",
+      "milestoneId": "milestone_stage_7_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_7_practical_mastery"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_7_clear",
+          "title": "Stage 7 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "progressCheck_stage_8_clear",
+      "title": "Stage 8 Cleared",
+      "summary": "Placeholder progressCheck for completing Stage 8: GM Integration.",
+      "stageBand": "stage8",
+      "difficulty": "elite",
+      "milestoneId": "milestone_stage_8_clear",
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_8_gm_integration"
+        }
+      ],
+      "rewards": [
+        {
+          "id": "reward_stage_8_clear",
+          "title": "Stage 8 Clear Trophy",
+          "type": "trophy"
+        }
+      ],
+      "sampleOnly": true
+    }
+  ],
+  "dailyPlans": [
+    {
+      "id": "daily_warmup",
+      "title": "Daily Warmup",
+      "summary": "A short warmup rotation for board vision and forcing-move habits.",
+      "actionLabel": "Queue warmup stub",
+      "stageBand": "stage1",
+      "targetLevelIds": [
+        "stage_1_board_vision_s1_board_scan_01",
+        "stage_2_forcing_moves_s2_checks_first_01"
+      ],
+      "payload": {
+        "hookType": "daily_rotation",
+        "slotCount": 2,
+        "rotationKey": "warmup"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "daily_tactics_ladder",
+      "title": "Daily Tactics Ladder",
+      "summary": "A lightweight tactics ladder that points into the pattern stages.",
+      "actionLabel": "Open tactics ladder stub",
+      "stageBand": "stage3",
+      "targetLevelIds": [
+        "stage_3_tactical_patterns_s3_forks_and_pins_01",
+        "stage_4_opening_discipline_s4_transition_to_middlegame_01"
+      ],
+      "payload": {
+        "hookType": "daily_rotation",
+        "slotCount": 2,
+        "rotationKey": "tactics_ladder"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "daily_practical_review",
+      "title": "Daily Practical Review",
+      "summary": "A practical review loop for planning and endgame technique.",
+      "actionLabel": "Open practical review stub",
+      "stageBand": "stage5",
+      "targetLevelIds": [
+        "stage_5_middlegame_plans_s5_imbalances_01",
+        "stage_6_endgame_essentials_s6_king_and_pawn_01"
+      ],
+      "payload": {
+        "hookType": "review_rotation",
+        "slotCount": 2,
+        "rotationKey": "practical_review"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "daily_master_push",
+      "title": "Daily Master Push",
+      "summary": "A late-stage daily hook for practical defense and integrated decision-making.",
+      "actionLabel": "Open master push stub",
+      "stageBand": "stage7",
+      "targetLevelIds": [
+        "stage_7_practical_mastery_s7_defense_and_counterplay_01",
+        "stage_8_gm_integration_s8_tournament_prep_01"
+      ],
+      "payload": {
+        "hookType": "late_stage_rotation",
+        "slotCount": 2,
+        "rotationKey": "master_push"
+      },
+      "sampleOnly": true
+    }
+  ],
+  "specialModes": [
+    {
+      "id": "survival_mode",
+      "title": "Survival Mode",
+      "subtitle": "Sudden-death run climb",
+      "summary": "Clear escalating Road to GM checkpoints in one life and keep the run alive as the deck speeds up.",
+      "modeType": "survival",
+      "stageBand": "stage1",
+      "difficulty": "beginner",
+      "estimatedMinutes": 6,
+      "payload": {
+        "entryStyle": "sudden_death_chain",
+        "bestScorePlaceholder": "Best run: --",
+        "ctaLabel": "Enter survival",
+        "featuredLabel": "Always available"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "puzzle_rush_3m",
+      "title": "Puzzle Rush",
+      "subtitle": "3-minute mode",
+      "summary": "Sprint through a 3-minute tactical burst seeded from your current Road to GM stage.",
+      "modeType": "sprint",
+      "stageBand": "stage2",
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "unlockConditions": [
+        {
+          "type": "level_completed",
+          "targetId": "stage_1_graduation_gate",
+          "description": "Clear the Stage 1 graduation gate."
+        }
+      ],
+      "payload": {
+        "entryStyle": "timed_tactics_queue",
+        "bestScorePlaceholder": "Best solve count: -- / 3:00",
+        "ctaLabel": "Start rush"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "endurance_mode",
+      "title": "Endurance Mode",
+      "subtitle": "Long-form focus block",
+      "summary": "Hold accuracy across a long Road to GM rotation without dropping below the target score floor.",
+      "modeType": "endurance",
+      "stageBand": "stage3",
+      "difficulty": "intermediate",
+      "estimatedMinutes": 12,
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_2_forcing_moves",
+          "description": "Complete Stage 2: Forcing Moves."
+        }
+      ],
+      "payload": {
+        "entryStyle": "long_rotation",
+        "bestScorePlaceholder": "Best run: No endurance clear yet",
+        "ctaLabel": "Begin endurance"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "blindfold_league",
+      "title": "Blindfold League",
+      "subtitle": "Visualization circuit",
+      "summary": "Train board memory and move recall with hidden-board sequences layered onto the curriculum climb.",
+      "modeType": "blindfold",
+      "stageBand": "stage4",
+      "difficulty": "intermediate",
+      "estimatedMinutes": 8,
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_3_tactical_patterns",
+          "description": "Complete Stage 3: Tactical Patterns."
+        }
+      ],
+      "payload": {
+        "entryStyle": "hidden_board_series",
+        "bestScorePlaceholder": "Best clean board: --",
+        "ctaLabel": "Enter blindfold"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "opening_duel",
+      "title": "Opening Duel",
+      "subtitle": "Prep showdown",
+      "summary": "Race through opening choices, punish off-book slips, and defend your prep under clock pressure.",
+      "modeType": "opening",
+      "stageBand": "stage5",
+      "difficulty": "advanced",
+      "estimatedMinutes": 7,
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_4_opening_discipline",
+          "description": "Complete Stage 4: Opening Discipline."
+        }
+      ],
+      "payload": {
+        "entryStyle": "opening_prep_match",
+        "bestScorePlaceholder": "Best prep run: --",
+        "ctaLabel": "Start duel"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "weekly_stress_test",
+      "title": "Weekly Stress Test",
+      "subtitle": "Rotating pressure check",
+      "summary": "A once-per-week gauntlet that remixes tactics, practical decisions, and endgame defense into one scorecard.",
+      "modeType": "weekly",
+      "stageBand": "stage6",
+      "difficulty": "advanced",
+      "estimatedMinutes": 10,
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_5_middlegame_plans",
+          "description": "Complete Stage 5: Middlegame Plans."
+        }
+      ],
+      "payload": {
+        "entryStyle": "weekly_gauntlet",
+        "bestScorePlaceholder": "Weekly best: Awaiting first attempt",
+        "ctaLabel": "Preview weekly test",
+        "scheduleLabel": "Refreshes every Monday"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "boss_battles",
+      "title": "Boss Battles",
+      "subtitle": "Graduation rematches",
+      "summary": "Replay Road to GM graduation bosses as a premium gauntlet with no filler rounds between fights.",
+      "modeType": "boss",
+      "stageBand": "stage7",
+      "difficulty": "elite",
+      "estimatedMinutes": 9,
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_6_endgame_essentials",
+          "description": "Complete Stage 6: Endgame Essentials."
+        }
+      ],
+      "payload": {
+        "entryStyle": "boss_gate_chain",
+        "bestScorePlaceholder": "Fastest clear: --",
+        "ctaLabel": "Enter boss battles"
+      },
+      "sampleOnly": true
+    },
+    {
+      "id": "calculation_overdrive",
+      "title": "Calculation Overdrive",
+      "subtitle": "Content-pack bonus slot",
+      "summary": "An extra pack-defined challenge slot for high-pressure calculation bursts beyond the base seven modes.",
+      "modeType": "bonus",
+      "stageBand": "stage8",
+      "difficulty": "elite",
+      "estimatedMinutes": 5,
+      "unlockConditions": [
+        {
+          "type": "stage_completed",
+          "targetId": "stage_7_practical_mastery",
+          "description": "Complete Stage 7: Practical Mastery."
+        }
+      ],
+      "payload": {
+        "entryStyle": "bonus_rotation",
+        "bestScorePlaceholder": "Best burst: Placeholder slot ready",
+        "ctaLabel": "Open bonus slot",
+        "slotType": "content_pack_extra"
+      },
+      "sampleOnly": true
+    }
+  ],
+  "chapters": [
+    {
+      "id": "chapter_foundations",
+      "title": "Chapter 1: Foundations",
+      "subtitle": "Board orientation and forcing-move habits that power everything else.",
+      "description": "The opening chapter scaffolds vision, coordinates, and forcing-move awareness so later tactical and strategic work has a clean base.",
+      "difficulty": "beginner",
+      "focusLabel": "Board fundamentals",
+      "stages": [
+        {
+          "id": "stage_1_board_vision",
+          "title": "Stage 1: Board Vision",
+          "subtitle": "Learn to scan the board quickly, name what matters, and avoid one-move misses.",
+          "description": "18 core mini-games focused on coordinates, board scan habits, piece recognition, and basic safety checks.",
+          "chapterId": "chapter_foundations",
+          "stageBand": "stage1",
+          "eloBand": {
+            "minimum": 0,
+            "maximum": 400,
+            "label": "0-400 ELO"
+          },
+          "difficulty": "beginner",
+          "focusLabel": "Orientation",
+          "reportedMiniGameCount": 18,
+          "rewardId": "reward_stage_1_clear",
+          "milestoneId": "milestone_stage_1_clear",
+          "groups": [
+            {
+              "id": "s1_board_scan",
+              "title": "Board Scan",
+              "summary": "Sweep ranks, files, and diagonals before you move.",
+              "reportedMiniGameCount": 5,
+              "levelIds": [
+                "stage_1_board_vision_s1_board_scan_01",
+                "stage_1_board_vision_s1_board_scan_02",
+                "stage_1_board_vision_s1_board_scan_03",
+                "stage_1_board_vision_s1_board_scan_04",
+                "stage_1_board_vision_s1_board_scan_05"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s1_coordinate_echo",
+              "title": "Coordinate Echo",
+              "summary": "Repeat square naming until board orientation becomes automatic.",
+              "reportedMiniGameCount": 4,
+              "levelIds": [
+                "stage_1_board_vision_s1_coordinate_echo_01",
+                "stage_1_board_vision_s1_coordinate_echo_02",
+                "stage_1_board_vision_s1_coordinate_echo_03",
+                "stage_1_board_vision_s1_coordinate_echo_04"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s1_piece_recognition",
+              "title": "Piece Recognition",
+              "summary": "Spot attackers, defenders, and loose pieces immediately.",
+              "reportedMiniGameCount": 4,
+              "levelIds": [
+                "stage_1_board_vision_s1_piece_recognition_01",
+                "stage_1_board_vision_s1_piece_recognition_02",
+                "stage_1_board_vision_s1_piece_recognition_03",
+                "stage_1_board_vision_s1_piece_recognition_04"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s1_safety_checks",
+              "title": "Safety Checks",
+              "summary": "Check scans, capture scans, and threat scans anchor every move.",
+              "reportedMiniGameCount": 5,
+              "levelIds": [
+                "stage_1_board_vision_s1_safety_checks_01",
+                "stage_1_board_vision_s1_safety_checks_02",
+                "stage_1_board_vision_s1_safety_checks_03",
+                "stage_1_board_vision_s1_safety_checks_04",
+                "stage_1_board_vision_s1_safety_checks_05"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_1",
+            "title": "Graduation: Board Vision Gate",
+            "summary": "Finish the stage with a short boss gate that ties the scan loop together.",
+            "actionLabel": "Attempt Board Vision Gate",
+            "targetLevelId": "stage_1_graduation_gate",
+            "rewardId": "reward_stage_1_clear",
+            "milestoneId": "milestone_stage_1_clear",
+            "specialModeId": "boss_rush",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_1_board_vision_s1_board_scan_01",
+              "title": "Board Scan: Corners and Center",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_board_scan",
+              "summary": "Developer scaffold for board scan inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Board Scan",
+                "levelOrdinal": 1,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_board_scan_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_board_scan",
+                    "levelId": "stage_1_board_vision_s1_board_scan_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_board_scan_02",
+              "title": "Board Scan: Rank Sweep",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_board_scan",
+              "summary": "Developer scaffold for board scan inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Board Scan",
+                "levelOrdinal": 2,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_board_scan_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_board_scan",
+                    "levelId": "stage_1_board_vision_s1_board_scan_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_board_scan_01"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_board_scan_03",
+              "title": "Board Scan: File Sweep",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_board_scan",
+              "summary": "Developer scaffold for board scan inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Board Scan",
+                "levelOrdinal": 3,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_board_scan_03_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_board_scan",
+                    "levelId": "stage_1_board_vision_s1_board_scan_03",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_board_scan_02"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_board_scan_04",
+              "title": "Board Scan: Diagonal Radar",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_board_scan",
+              "summary": "Developer scaffold for board scan inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Board Scan",
+                "levelOrdinal": 4,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_board_scan_04_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_board_scan",
+                    "levelId": "stage_1_board_vision_s1_board_scan_04",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_board_scan_03"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_board_scan_05",
+              "title": "Board Scan: Knight Hop Map",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_board_scan",
+              "summary": "Developer scaffold for board scan inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Board Scan",
+                "levelOrdinal": 5,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_board_scan_05_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_board_scan",
+                    "levelId": "stage_1_board_vision_s1_board_scan_05",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_board_scan_04"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_coordinate_echo_01",
+              "title": "Coordinate Echo: Echo A",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_coordinate_echo",
+              "summary": "Developer scaffold for coordinate echo inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Coordinate Echo",
+                "levelOrdinal": 6,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_coordinate_echo_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_coordinate_echo",
+                    "levelId": "stage_1_board_vision_s1_coordinate_echo_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_board_scan_05"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_coordinate_echo_02",
+              "title": "Coordinate Echo: Echo B",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_coordinate_echo",
+              "summary": "Developer scaffold for coordinate echo inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Coordinate Echo",
+                "levelOrdinal": 7,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_coordinate_echo_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_coordinate_echo",
+                    "levelId": "stage_1_board_vision_s1_coordinate_echo_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_coordinate_echo_01"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_coordinate_echo_03",
+              "title": "Coordinate Echo: Echo C",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_coordinate_echo",
+              "summary": "Developer scaffold for coordinate echo inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Coordinate Echo",
+                "levelOrdinal": 8,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_coordinate_echo_03_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_coordinate_echo",
+                    "levelId": "stage_1_board_vision_s1_coordinate_echo_03",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_coordinate_echo_02"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_coordinate_echo_04",
+              "title": "Coordinate Echo: Echo D",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_coordinate_echo",
+              "summary": "Developer scaffold for coordinate echo inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "coordinates",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Coordinate Echo",
+                "levelOrdinal": 9,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_coordinate_echo_04_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_coordinate_echo",
+                    "levelId": "stage_1_board_vision_s1_coordinate_echo_04",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_coordinate_echo_03"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_piece_recognition_01",
+              "title": "Piece Recognition: Attackers",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_piece_recognition",
+              "summary": "Developer scaffold for piece recognition inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Piece Recognition",
+                "levelOrdinal": 10,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_piece_recognition_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_piece_recognition",
+                    "levelId": "stage_1_board_vision_s1_piece_recognition_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_coordinate_echo_04"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_piece_recognition_02",
+              "title": "Piece Recognition: Defenders",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_piece_recognition",
+              "summary": "Developer scaffold for piece recognition inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Piece Recognition",
+                "levelOrdinal": 11,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_piece_recognition_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_piece_recognition",
+                    "levelId": "stage_1_board_vision_s1_piece_recognition_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_piece_recognition_01"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_piece_recognition_03",
+              "title": "Piece Recognition: Loose Pieces",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_piece_recognition",
+              "summary": "Developer scaffold for piece recognition inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Piece Recognition",
+                "levelOrdinal": 12,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_piece_recognition_03_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_piece_recognition",
+                    "levelId": "stage_1_board_vision_s1_piece_recognition_03",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_piece_recognition_02"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_piece_recognition_04",
+              "title": "Piece Recognition: Piece Pairs",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_piece_recognition",
+              "summary": "Developer scaffold for piece recognition inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Piece Recognition",
+                "levelOrdinal": 13,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_piece_recognition_04_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_piece_recognition",
+                    "levelId": "stage_1_board_vision_s1_piece_recognition_04",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_piece_recognition_03"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_safety_checks_01",
+              "title": "Safety Checks: Check Scan",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_safety_checks",
+              "summary": "Developer scaffold for safety checks inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Safety Checks",
+                "levelOrdinal": 14,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_safety_checks_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_safety_checks",
+                    "levelId": "stage_1_board_vision_s1_safety_checks_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_piece_recognition_04"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_safety_checks_02",
+              "title": "Safety Checks: Capture Audit",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_safety_checks",
+              "summary": "Developer scaffold for safety checks inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Safety Checks",
+                "levelOrdinal": 15,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_safety_checks_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_safety_checks",
+                    "levelId": "stage_1_board_vision_s1_safety_checks_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_safety_checks_01"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_safety_checks_03",
+              "title": "Safety Checks: Threat Audit",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_safety_checks",
+              "summary": "Developer scaffold for safety checks inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Safety Checks",
+                "levelOrdinal": 16,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_safety_checks_03_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_safety_checks",
+                    "levelId": "stage_1_board_vision_s1_safety_checks_03",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_safety_checks_02"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_safety_checks_04",
+              "title": "Safety Checks: Safe King Zone",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_safety_checks",
+              "summary": "Developer scaffold for safety checks inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Safety Checks",
+                "levelOrdinal": 17,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_safety_checks_04_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_safety_checks",
+                    "levelId": "stage_1_board_vision_s1_safety_checks_04",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_safety_checks_03"
+              ]
+            },
+            {
+              "id": "stage_1_board_vision_s1_safety_checks_05",
+              "title": "Safety Checks: Blunder Net",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "groupId": "s1_safety_checks",
+              "summary": "Developer scaffold for safety checks inside Stage 1: Board Vision. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 4,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "mixed",
+              "difficulty": "beginner",
+              "coachPrompt": "Name the square, name the piece, then name the threat. Speed matters less than clarity here.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Safety Checks",
+                "levelOrdinal": 18,
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_board_vision_s1_safety_checks_05_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 4,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_1_board_vision",
+                    "groupId": "s1_safety_checks",
+                    "levelId": "stage_1_board_vision_s1_safety_checks_05",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_safety_checks_04"
+              ]
+            },
+            {
+              "id": "stage_1_graduation_gate",
+              "title": "Graduation: Board Vision Gate",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_1_board_vision",
+              "stageBand": "stage1",
+              "summary": "Finish the stage with a short boss gate that ties the scan loop together.",
+              "estimatedMinutes": 6,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "beginner",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 1: Board Vision. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt Board Vision Gate",
+              "rewardId": "reward_stage_1_clear",
+              "milestoneId": "milestone_stage_1_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 1,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_1_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_1_board_vision",
+                    "levelId": "stage_1_graduation_gate",
+                    "specialModeId": "boss_rush"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_board_vision_s1_safety_checks_05"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        },
+        {
+          "id": "stage_2_forcing_moves",
+          "title": "Stage 2: Forcing Moves",
+          "subtitle": "Build the habit of checking checks, captures, and threats before searching deeper.",
+          "description": "9 core mini-games centered on forcing move order, loose pieces, and basic mate threats.",
+          "chapterId": "chapter_foundations",
+          "stageBand": "stage2",
+          "eloBand": {
+            "minimum": 400,
+            "maximum": 800,
+            "label": "400-800 ELO"
+          },
+          "difficulty": "beginner",
+          "focusLabel": "Forcing Moves",
+          "reportedMiniGameCount": 9,
+          "rewardId": "reward_stage_2_clear",
+          "milestoneId": "milestone_stage_2_clear",
+          "groups": [
+            {
+              "id": "s2_checks_first",
+              "title": "Checks First",
+              "summary": "Force yourself to inspect direct checks before quieter ideas.",
+              "reportedMiniGameCount": 3,
+              "levelIds": [
+                "stage_2_forcing_moves_s2_checks_first_01",
+                "stage_2_forcing_moves_s2_checks_first_02",
+                "stage_2_forcing_moves_s2_checks_first_03"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s2_loose_pieces",
+              "title": "Loose Pieces",
+              "summary": "Punish hanging pieces and overloaded defenders.",
+              "reportedMiniGameCount": 3,
+              "levelIds": [
+                "stage_2_forcing_moves_s2_loose_pieces_01",
+                "stage_2_forcing_moves_s2_loose_pieces_02",
+                "stage_2_forcing_moves_s2_loose_pieces_03"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s2_mate_threats",
+              "title": "Mate Threats",
+              "summary": "See nets before they appear on the board.",
+              "reportedMiniGameCount": 3,
+              "levelIds": [
+                "stage_2_forcing_moves_s2_mate_threats_01",
+                "stage_2_forcing_moves_s2_mate_threats_02",
+                "stage_2_forcing_moves_s2_mate_threats_03"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_2",
+            "title": "Graduation: Forcing Moves Gate",
+            "summary": "Clear the stage by solving a compact forcing-move boss route.",
+            "actionLabel": "Attempt Forcing Moves Gate",
+            "targetLevelId": "stage_2_graduation_gate",
+            "rewardId": "reward_stage_2_clear",
+            "milestoneId": "milestone_stage_2_clear",
+            "specialModeId": "boss_rush",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_2_forcing_moves_s2_checks_first_01",
+              "title": "Checks First: Direct Checks",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_checks_first",
+              "summary": "Developer scaffold for checks first inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Checks First",
+                "levelOrdinal": 1,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_checks_first_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_checks_first",
+                    "levelId": "stage_2_forcing_moves_s2_checks_first_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_1_graduation_gate"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_checks_first_02",
+              "title": "Checks First: Hidden Checks",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_checks_first",
+              "summary": "Developer scaffold for checks first inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Checks First",
+                "levelOrdinal": 2,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_checks_first_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_checks_first",
+                    "levelId": "stage_2_forcing_moves_s2_checks_first_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_checks_first_01"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_checks_first_03",
+              "title": "Checks First: Checkmate Threats",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_checks_first",
+              "summary": "Developer scaffold for checks first inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Checks First",
+                "levelOrdinal": 3,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_checks_first_03_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_checks_first",
+                    "levelId": "stage_2_forcing_moves_s2_checks_first_03",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_checks_first_02"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_loose_pieces_01",
+              "title": "Loose Pieces: Hanging Piece Hunt",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_loose_pieces",
+              "summary": "Developer scaffold for loose pieces inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Loose Pieces",
+                "levelOrdinal": 4,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_loose_pieces_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_loose_pieces",
+                    "levelId": "stage_2_forcing_moves_s2_loose_pieces_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_checks_first_03"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_loose_pieces_02",
+              "title": "Loose Pieces: Undefended Back Rank",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_loose_pieces",
+              "summary": "Developer scaffold for loose pieces inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Loose Pieces",
+                "levelOrdinal": 5,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_loose_pieces_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_loose_pieces",
+                    "levelId": "stage_2_forcing_moves_s2_loose_pieces_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_loose_pieces_01"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_loose_pieces_03",
+              "title": "Loose Pieces: Overloaded Defender",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_loose_pieces",
+              "summary": "Developer scaffold for loose pieces inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Loose Pieces",
+                "levelOrdinal": 6,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_loose_pieces_03_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_loose_pieces",
+                    "levelId": "stage_2_forcing_moves_s2_loose_pieces_03",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_loose_pieces_02"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_mate_threats_01",
+              "title": "Mate Threats: Mate in One Radar",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_mate_threats",
+              "summary": "Developer scaffold for mate threats inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Mate Threats",
+                "levelOrdinal": 7,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_mate_threats_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_mate_threats",
+                    "levelId": "stage_2_forcing_moves_s2_mate_threats_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_loose_pieces_03"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_mate_threats_02",
+              "title": "Mate Threats: Net Builder",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_mate_threats",
+              "summary": "Developer scaffold for mate threats inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Mate Threats",
+                "levelOrdinal": 8,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_mate_threats_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_mate_threats",
+                    "levelId": "stage_2_forcing_moves_s2_mate_threats_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_mate_threats_01"
+              ]
+            },
+            {
+              "id": "stage_2_forcing_moves_s2_mate_threats_03",
+              "title": "Mate Threats: Escape Squares",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "groupId": "s2_mate_threats",
+              "summary": "Developer scaffold for mate threats inside Stage 2: Forcing Moves. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "puzzles",
+              "difficulty": "beginner",
+              "coachPrompt": "When the position changes quickly, force your scan to start with the sharpest candidate move.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Mate Threats",
+                "levelOrdinal": 9,
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_forcing_moves_s2_mate_threats_03_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "groupId": "s2_mate_threats",
+                    "levelId": "stage_2_forcing_moves_s2_mate_threats_03",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_mate_threats_02"
+              ]
+            },
+            {
+              "id": "stage_2_graduation_gate",
+              "title": "Graduation: Forcing Moves Gate",
+              "chapterId": "chapter_foundations",
+              "stageId": "stage_2_forcing_moves",
+              "stageBand": "stage2",
+              "summary": "Clear the stage by solving a compact forcing-move boss route.",
+              "estimatedMinutes": 7,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "beginner",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 2: Forcing Moves. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt Forcing Moves Gate",
+              "rewardId": "reward_stage_2_clear",
+              "milestoneId": "milestone_stage_2_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 2,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_2_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_2_forcing_moves",
+                    "levelId": "stage_2_graduation_gate",
+                    "specialModeId": "boss_rush"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_forcing_moves_s2_mate_threats_03"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "chapter_pattern_to_plan",
+      "title": "Chapter 2: Pattern To Plan",
+      "subtitle": "Move from tactical motifs into disciplined opening and transition play.",
+      "description": "This chapter bridges tactical recognition into opening discipline and cleaner middlegame handoffs.",
+      "difficulty": "intermediate",
+      "focusLabel": "Pattern to plan",
+      "stages": [
+        {
+          "id": "stage_3_tactical_patterns",
+          "title": "Stage 3: Tactical Patterns",
+          "subtitle": "Recognize common tactical motifs and finish short calculation branches accurately.",
+          "description": "6 core mini-games on forks, pins, skewers, discoveries, and compact calculation bursts.",
+          "chapterId": "chapter_pattern_to_plan",
+          "stageBand": "stage3",
+          "eloBand": {
+            "minimum": 800,
+            "maximum": 1100,
+            "label": "800-1100 ELO"
+          },
+          "difficulty": "intermediate",
+          "focusLabel": "Pattern Recognition",
+          "reportedMiniGameCount": 6,
+          "rewardId": "reward_stage_3_clear",
+          "milestoneId": "milestone_stage_3_clear",
+          "groups": [
+            {
+              "id": "s3_forks_and_pins",
+              "title": "Forks and Pins",
+              "summary": "Build fast pattern recall for the two motifs that appear everywhere.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_3_tactical_patterns_s3_forks_and_pins_01",
+                "stage_3_tactical_patterns_s3_forks_and_pins_02"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s3_skewers_and_discovery",
+              "title": "Skewers and Discovery",
+              "summary": "Spot line-opening ideas before they disappear.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_3_tactical_patterns_s3_skewers_and_discovery_01",
+                "stage_3_tactical_patterns_s3_skewers_and_discovery_02"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s3_calculation_bursts",
+              "title": "Calculation Bursts",
+              "summary": "Take short tactical trees from candidate move to conclusion.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_3_tactical_patterns_s3_calculation_bursts_01",
+                "stage_3_tactical_patterns_s3_calculation_bursts_02"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_3",
+            "title": "Graduation: Tactical Patterns Gate",
+            "summary": "Finish the stage with a boss route that mixes motif recall and short calculation.",
+            "actionLabel": "Attempt Tactical Patterns Gate",
+            "targetLevelId": "stage_3_graduation_gate",
+            "rewardId": "reward_stage_3_clear",
+            "milestoneId": "milestone_stage_3_clear",
+            "specialModeId": "boss_rush",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_3_tactical_patterns_s3_forks_and_pins_01",
+              "title": "Forks and Pins: Knight Fork Map",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_3_tactical_patterns",
+              "stageBand": "stage3",
+              "groupId": "s3_forks_and_pins",
+              "summary": "Developer scaffold for forks and pins inside Stage 3: Tactical Patterns. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "puzzles",
+              "difficulty": "intermediate",
+              "coachPrompt": "Name the motif, then calculate just far enough to prove it works.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Forks and Pins",
+                "levelOrdinal": 1,
+                "stageNumber": 3,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_3_tactical_patterns_s3_forks_and_pins_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_3_tactical_patterns",
+                    "groupId": "s3_forks_and_pins",
+                    "levelId": "stage_3_tactical_patterns_s3_forks_and_pins_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_2_graduation_gate"
+              ]
+            },
+            {
+              "id": "stage_3_tactical_patterns_s3_forks_and_pins_02",
+              "title": "Forks and Pins: Absolute Pin",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_3_tactical_patterns",
+              "stageBand": "stage3",
+              "groupId": "s3_forks_and_pins",
+              "summary": "Developer scaffold for forks and pins inside Stage 3: Tactical Patterns. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "puzzles",
+              "difficulty": "intermediate",
+              "coachPrompt": "Name the motif, then calculate just far enough to prove it works.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Forks and Pins",
+                "levelOrdinal": 2,
+                "stageNumber": 3,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_3_tactical_patterns_s3_forks_and_pins_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_3_tactical_patterns",
+                    "groupId": "s3_forks_and_pins",
+                    "levelId": "stage_3_tactical_patterns_s3_forks_and_pins_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_3_tactical_patterns_s3_forks_and_pins_01"
+              ]
+            },
+            {
+              "id": "stage_3_tactical_patterns_s3_skewers_and_discovery_01",
+              "title": "Skewers and Discovery: Diagonal Skewer",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_3_tactical_patterns",
+              "stageBand": "stage3",
+              "groupId": "s3_skewers_and_discovery",
+              "summary": "Developer scaffold for skewers and discovery inside Stage 3: Tactical Patterns. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "puzzles",
+              "difficulty": "intermediate",
+              "coachPrompt": "Name the motif, then calculate just far enough to prove it works.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Skewers and Discovery",
+                "levelOrdinal": 3,
+                "stageNumber": 3,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_3_tactical_patterns_s3_skewers_and_discovery_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_3_tactical_patterns",
+                    "groupId": "s3_skewers_and_discovery",
+                    "levelId": "stage_3_tactical_patterns_s3_skewers_and_discovery_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_3_tactical_patterns_s3_forks_and_pins_02"
+              ]
+            },
+            {
+              "id": "stage_3_tactical_patterns_s3_skewers_and_discovery_02",
+              "title": "Skewers and Discovery: Discovered Attack",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_3_tactical_patterns",
+              "stageBand": "stage3",
+              "groupId": "s3_skewers_and_discovery",
+              "summary": "Developer scaffold for skewers and discovery inside Stage 3: Tactical Patterns. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "puzzles",
+              "difficulty": "intermediate",
+              "coachPrompt": "Name the motif, then calculate just far enough to prove it works.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Skewers and Discovery",
+                "levelOrdinal": 4,
+                "stageNumber": 3,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_3_tactical_patterns_s3_skewers_and_discovery_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_3_tactical_patterns",
+                    "groupId": "s3_skewers_and_discovery",
+                    "levelId": "stage_3_tactical_patterns_s3_skewers_and_discovery_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_3_tactical_patterns_s3_skewers_and_discovery_01"
+              ]
+            },
+            {
+              "id": "stage_3_tactical_patterns_s3_calculation_bursts_01",
+              "title": "Calculation Bursts: Two-Move Burst",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_3_tactical_patterns",
+              "stageBand": "stage3",
+              "groupId": "s3_calculation_bursts",
+              "summary": "Developer scaffold for calculation bursts inside Stage 3: Tactical Patterns. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "intermediate",
+              "coachPrompt": "Name the motif, then calculate just far enough to prove it works.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Calculation Bursts",
+                "levelOrdinal": 5,
+                "stageNumber": 3,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_3_tactical_patterns_s3_calculation_bursts_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_3_tactical_patterns",
+                    "groupId": "s3_calculation_bursts",
+                    "levelId": "stage_3_tactical_patterns_s3_calculation_bursts_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_3_tactical_patterns_s3_skewers_and_discovery_02"
+              ]
+            },
+            {
+              "id": "stage_3_tactical_patterns_s3_calculation_bursts_02",
+              "title": "Calculation Bursts: Candidate Tree",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_3_tactical_patterns",
+              "stageBand": "stage3",
+              "groupId": "s3_calculation_bursts",
+              "summary": "Developer scaffold for calculation bursts inside Stage 3: Tactical Patterns. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 5,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "intermediate",
+              "coachPrompt": "Name the motif, then calculate just far enough to prove it works.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Calculation Bursts",
+                "levelOrdinal": 6,
+                "stageNumber": 3,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_3_tactical_patterns_s3_calculation_bursts_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 5,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_3_tactical_patterns",
+                    "groupId": "s3_calculation_bursts",
+                    "levelId": "stage_3_tactical_patterns_s3_calculation_bursts_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_3_tactical_patterns_s3_calculation_bursts_01"
+              ]
+            },
+            {
+              "id": "stage_3_graduation_gate",
+              "title": "Graduation: Tactical Patterns Gate",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_3_tactical_patterns",
+              "stageBand": "stage3",
+              "summary": "Finish the stage with a boss route that mixes motif recall and short calculation.",
+              "estimatedMinutes": 7,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "intermediate",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 3: Tactical Patterns. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt Tactical Patterns Gate",
+              "rewardId": "reward_stage_3_clear",
+              "milestoneId": "milestone_stage_3_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 3,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_3_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_3_tactical_patterns",
+                    "levelId": "stage_3_graduation_gate",
+                    "specialModeId": "boss_rush"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_3_tactical_patterns_s3_calculation_bursts_02"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        },
+        {
+          "id": "stage_4_opening_discipline",
+          "title": "Stage 4: Opening Discipline",
+          "subtitle": "Convert opening principles into practical development choices and safer middlegame handoffs.",
+          "description": "3 core mini-games for center control, king safety, and transition planning.",
+          "chapterId": "chapter_pattern_to_plan",
+          "stageBand": "stage4",
+          "eloBand": {
+            "minimum": 1100,
+            "maximum": 1400,
+            "label": "1100-1400 ELO"
+          },
+          "difficulty": "intermediate",
+          "focusLabel": "Opening Discipline",
+          "reportedMiniGameCount": 3,
+          "rewardId": "reward_stage_4_clear",
+          "milestoneId": "milestone_stage_4_clear",
+          "groups": [
+            {
+              "id": "s4_center_and_development",
+              "title": "Center and Development",
+              "summary": "Value space and piece activity over random early attacks.",
+              "reportedMiniGameCount": 1,
+              "levelIds": [
+                "stage_4_opening_discipline_s4_center_and_development_01"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s4_king_safety",
+              "title": "King Safety",
+              "summary": "Castling timing and piece coordination decide whether the middlegame starts cleanly.",
+              "reportedMiniGameCount": 1,
+              "levelIds": [
+                "stage_4_opening_discipline_s4_king_safety_01"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s4_transition_to_middlegame",
+              "title": "Transition to Middlegame",
+              "summary": "Connect development to a concrete follow-up plan.",
+              "reportedMiniGameCount": 1,
+              "levelIds": [
+                "stage_4_opening_discipline_s4_transition_to_middlegame_01"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_4",
+            "title": "Graduation: Opening Discipline Gate",
+            "summary": "Finish the stage with a compact opening-to-middlegame boss route.",
+            "actionLabel": "Attempt Opening Discipline Gate",
+            "targetLevelId": "stage_4_graduation_gate",
+            "rewardId": "reward_stage_4_clear",
+            "milestoneId": "milestone_stage_4_clear",
+            "specialModeId": "boss_rush",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_4_opening_discipline_s4_center_and_development_01",
+              "title": "Center and Development: Center Claim",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_4_opening_discipline",
+              "stageBand": "stage4",
+              "groupId": "s4_center_and_development",
+              "summary": "Developer scaffold for center and development inside Stage 4: Opening Discipline. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 6,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "opening",
+              "difficulty": "intermediate",
+              "coachPrompt": "Use principles to filter bad candidate moves, not to memorize move orders blindly.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Center and Development",
+                "levelOrdinal": 1,
+                "stageNumber": 4,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_4_opening_discipline_s4_center_and_development_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_4_opening_discipline",
+                    "groupId": "s4_center_and_development",
+                    "levelId": "stage_4_opening_discipline_s4_center_and_development_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_3_graduation_gate"
+              ]
+            },
+            {
+              "id": "stage_4_opening_discipline_s4_king_safety_01",
+              "title": "King Safety: Castle on Time",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_4_opening_discipline",
+              "stageBand": "stage4",
+              "groupId": "s4_king_safety",
+              "summary": "Developer scaffold for king safety inside Stage 4: Opening Discipline. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 6,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "opening",
+              "difficulty": "intermediate",
+              "coachPrompt": "Use principles to filter bad candidate moves, not to memorize move orders blindly.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "King Safety",
+                "levelOrdinal": 2,
+                "stageNumber": 4,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_4_opening_discipline_s4_king_safety_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_4_opening_discipline",
+                    "groupId": "s4_king_safety",
+                    "levelId": "stage_4_opening_discipline_s4_king_safety_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_4_opening_discipline_s4_center_and_development_01"
+              ]
+            },
+            {
+              "id": "stage_4_opening_discipline_s4_transition_to_middlegame_01",
+              "title": "Transition to Middlegame: Development to Plan",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_4_opening_discipline",
+              "stageBand": "stage4",
+              "groupId": "s4_transition_to_middlegame",
+              "summary": "Developer scaffold for transition to middlegame inside Stage 4: Opening Discipline. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 6,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "intermediate",
+              "coachPrompt": "Use principles to filter bad candidate moves, not to memorize move orders blindly.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Transition to Middlegame",
+                "levelOrdinal": 3,
+                "stageNumber": 4,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_4_opening_discipline_s4_transition_to_middlegame_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_4_opening_discipline",
+                    "groupId": "s4_transition_to_middlegame",
+                    "levelId": "stage_4_opening_discipline_s4_transition_to_middlegame_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_4_opening_discipline_s4_king_safety_01"
+              ]
+            },
+            {
+              "id": "stage_4_graduation_gate",
+              "title": "Graduation: Opening Discipline Gate",
+              "chapterId": "chapter_pattern_to_plan",
+              "stageId": "stage_4_opening_discipline",
+              "stageBand": "stage4",
+              "summary": "Finish the stage with a compact opening-to-middlegame boss route.",
+              "estimatedMinutes": 8,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "intermediate",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 4: Opening Discipline. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt Opening Discipline Gate",
+              "rewardId": "reward_stage_4_clear",
+              "milestoneId": "milestone_stage_4_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 4,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_4_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 8,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_4_opening_discipline",
+                    "levelId": "stage_4_graduation_gate",
+                    "specialModeId": "boss_rush"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_4_opening_discipline_s4_transition_to_middlegame_01"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "chapter_practical_play",
+      "title": "Chapter 3: Practical Play",
+      "subtitle": "Turn imbalances into plans and convert simplified positions accurately.",
+      "description": "This chapter focuses on readable plans, practical pawn breaks, and endgame technique that survives real games.",
+      "difficulty": "advanced",
+      "focusLabel": "Practical play",
+      "stages": [
+        {
+          "id": "stage_5_middlegame_plans",
+          "title": "Stage 5: Middlegame Plans",
+          "subtitle": "Read imbalances, improve the worst piece, and prepare the right pawn break.",
+          "description": "4 core mini-games on imbalances, weak squares, and practical pawn-break planning.",
+          "chapterId": "chapter_practical_play",
+          "stageBand": "stage5",
+          "eloBand": {
+            "minimum": 1400,
+            "maximum": 1700,
+            "label": "1400-1700 ELO"
+          },
+          "difficulty": "advanced",
+          "focusLabel": "Planning",
+          "reportedMiniGameCount": 4,
+          "rewardId": "reward_stage_5_clear",
+          "milestoneId": "milestone_stage_5_clear",
+          "groups": [
+            {
+              "id": "s5_imbalances",
+              "title": "Imbalances",
+              "summary": "Turn static features into a working plan.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_5_middlegame_plans_s5_imbalances_01",
+                "stage_5_middlegame_plans_s5_imbalances_02"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s5_pawn_breaks",
+              "title": "Pawn Breaks",
+              "summary": "Prepare the break before you push the pawn.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_5_middlegame_plans_s5_pawn_breaks_01",
+                "stage_5_middlegame_plans_s5_pawn_breaks_02"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_5",
+            "title": "Graduation: Middlegame Plans Gate",
+            "summary": "Finish the stage with a boss route that tests plan selection under pressure.",
+            "actionLabel": "Attempt Middlegame Plans Gate",
+            "targetLevelId": "stage_5_graduation_gate",
+            "rewardId": "reward_stage_5_clear",
+            "milestoneId": "milestone_stage_5_clear",
+            "specialModeId": "gm_mock_match",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_5_middlegame_plans_s5_imbalances_01",
+              "title": "Imbalances: Best Piece, Worst Piece",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_5_middlegame_plans",
+              "stageBand": "stage5",
+              "groupId": "s5_imbalances",
+              "summary": "Developer scaffold for imbalances inside Stage 5: Middlegame Plans. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 6,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "Describe the position in plain language first, then choose the move that matches that story.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Imbalances",
+                "levelOrdinal": 1,
+                "stageNumber": 5,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_5_middlegame_plans_s5_imbalances_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_5_middlegame_plans",
+                    "groupId": "s5_imbalances",
+                    "levelId": "stage_5_middlegame_plans_s5_imbalances_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_4_graduation_gate"
+              ]
+            },
+            {
+              "id": "stage_5_middlegame_plans_s5_imbalances_02",
+              "title": "Imbalances: Weak Squares",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_5_middlegame_plans",
+              "stageBand": "stage5",
+              "groupId": "s5_imbalances",
+              "summary": "Developer scaffold for imbalances inside Stage 5: Middlegame Plans. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 6,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "Describe the position in plain language first, then choose the move that matches that story.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Imbalances",
+                "levelOrdinal": 2,
+                "stageNumber": 5,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_5_middlegame_plans_s5_imbalances_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_5_middlegame_plans",
+                    "groupId": "s5_imbalances",
+                    "levelId": "stage_5_middlegame_plans_s5_imbalances_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_5_middlegame_plans_s5_imbalances_01"
+              ]
+            },
+            {
+              "id": "stage_5_middlegame_plans_s5_pawn_breaks_01",
+              "title": "Pawn Breaks: Prepare the Break",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_5_middlegame_plans",
+              "stageBand": "stage5",
+              "groupId": "s5_pawn_breaks",
+              "summary": "Developer scaffold for pawn breaks inside Stage 5: Middlegame Plans. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 6,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "Describe the position in plain language first, then choose the move that matches that story.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Pawn Breaks",
+                "levelOrdinal": 3,
+                "stageNumber": 5,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_5_middlegame_plans_s5_pawn_breaks_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_5_middlegame_plans",
+                    "groupId": "s5_pawn_breaks",
+                    "levelId": "stage_5_middlegame_plans_s5_pawn_breaks_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_5_middlegame_plans_s5_imbalances_02"
+              ]
+            },
+            {
+              "id": "stage_5_middlegame_plans_s5_pawn_breaks_02",
+              "title": "Pawn Breaks: Open the File",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_5_middlegame_plans",
+              "stageBand": "stage5",
+              "groupId": "s5_pawn_breaks",
+              "summary": "Developer scaffold for pawn breaks inside Stage 5: Middlegame Plans. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 6,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "Describe the position in plain language first, then choose the move that matches that story.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Pawn Breaks",
+                "levelOrdinal": 4,
+                "stageNumber": 5,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_5_middlegame_plans_s5_pawn_breaks_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 6,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_5_middlegame_plans",
+                    "groupId": "s5_pawn_breaks",
+                    "levelId": "stage_5_middlegame_plans_s5_pawn_breaks_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_5_middlegame_plans_s5_pawn_breaks_01"
+              ]
+            },
+            {
+              "id": "stage_5_graduation_gate",
+              "title": "Graduation: Middlegame Plans Gate",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_5_middlegame_plans",
+              "stageBand": "stage5",
+              "summary": "Finish the stage with a boss route that tests plan selection under pressure.",
+              "estimatedMinutes": 8,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 5: Middlegame Plans. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt Middlegame Plans Gate",
+              "rewardId": "reward_stage_5_clear",
+              "milestoneId": "milestone_stage_5_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 5,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_5_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 8,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_5_middlegame_plans",
+                    "levelId": "stage_5_graduation_gate",
+                    "specialModeId": "gm_mock_match"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_5_middlegame_plans_s5_pawn_breaks_02"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        },
+        {
+          "id": "stage_6_endgame_essentials",
+          "title": "Stage 6: Endgame Essentials",
+          "subtitle": "Convert cleaner endgames with better king activity and technical discipline.",
+          "description": "4 core mini-games covering king-and-pawn technique and practical rook endgame habits.",
+          "chapterId": "chapter_practical_play",
+          "stageBand": "stage6",
+          "eloBand": {
+            "minimum": 1700,
+            "maximum": 1900,
+            "label": "1700-1900 ELO"
+          },
+          "difficulty": "advanced",
+          "focusLabel": "Conversion",
+          "reportedMiniGameCount": 4,
+          "rewardId": "reward_stage_6_clear",
+          "milestoneId": "milestone_stage_6_clear",
+          "groups": [
+            {
+              "id": "s6_king_and_pawn",
+              "title": "King and Pawn",
+              "summary": "Master the small rules that decide simple endgames.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_6_endgame_essentials_s6_king_and_pawn_01",
+                "stage_6_endgame_essentials_s6_king_and_pawn_02"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s6_rook_endgames",
+              "title": "Rook Endgames",
+              "summary": "Prioritize rook activity and king cut-off technique.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_6_endgame_essentials_s6_rook_endgames_01",
+                "stage_6_endgame_essentials_s6_rook_endgames_02"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_6",
+            "title": "Graduation: Endgame Essentials Gate",
+            "summary": "Finish the stage with a boss route focused on clean technical conversion.",
+            "actionLabel": "Attempt Endgame Essentials Gate",
+            "targetLevelId": "stage_6_graduation_gate",
+            "rewardId": "reward_stage_6_clear",
+            "milestoneId": "milestone_stage_6_clear",
+            "specialModeId": "gm_mock_match",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_6_endgame_essentials_s6_king_and_pawn_01",
+              "title": "King and Pawn: Square Rule",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_6_endgame_essentials",
+              "stageBand": "stage6",
+              "groupId": "s6_king_and_pawn",
+              "summary": "Developer scaffold for king and pawn inside Stage 6: Endgame Essentials. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "In endgames, every tempo matters. Count king moves and forcing checks before you choose.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "King and Pawn",
+                "levelOrdinal": 1,
+                "stageNumber": 6,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_6_endgame_essentials_s6_king_and_pawn_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_6_endgame_essentials",
+                    "groupId": "s6_king_and_pawn",
+                    "levelId": "stage_6_endgame_essentials_s6_king_and_pawn_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_5_graduation_gate"
+              ]
+            },
+            {
+              "id": "stage_6_endgame_essentials_s6_king_and_pawn_02",
+              "title": "King and Pawn: Opposition Ladder",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_6_endgame_essentials",
+              "stageBand": "stage6",
+              "groupId": "s6_king_and_pawn",
+              "summary": "Developer scaffold for king and pawn inside Stage 6: Endgame Essentials. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "In endgames, every tempo matters. Count king moves and forcing checks before you choose.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "King and Pawn",
+                "levelOrdinal": 2,
+                "stageNumber": 6,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_6_endgame_essentials_s6_king_and_pawn_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_6_endgame_essentials",
+                    "groupId": "s6_king_and_pawn",
+                    "levelId": "stage_6_endgame_essentials_s6_king_and_pawn_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_6_endgame_essentials_s6_king_and_pawn_01"
+              ]
+            },
+            {
+              "id": "stage_6_endgame_essentials_s6_rook_endgames_01",
+              "title": "Rook Endgames: Active Rook",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_6_endgame_essentials",
+              "stageBand": "stage6",
+              "groupId": "s6_rook_endgames",
+              "summary": "Developer scaffold for rook endgames inside Stage 6: Endgame Essentials. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "In endgames, every tempo matters. Count king moves and forcing checks before you choose.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Rook Endgames",
+                "levelOrdinal": 3,
+                "stageNumber": 6,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_6_endgame_essentials_s6_rook_endgames_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_6_endgame_essentials",
+                    "groupId": "s6_rook_endgames",
+                    "levelId": "stage_6_endgame_essentials_s6_rook_endgames_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_6_endgame_essentials_s6_king_and_pawn_02"
+              ]
+            },
+            {
+              "id": "stage_6_endgame_essentials_s6_rook_endgames_02",
+              "title": "Rook Endgames: Cut-Off King",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_6_endgame_essentials",
+              "stageBand": "stage6",
+              "groupId": "s6_rook_endgames",
+              "summary": "Developer scaffold for rook endgames inside Stage 6: Endgame Essentials. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "In endgames, every tempo matters. Count king moves and forcing checks before you choose.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Rook Endgames",
+                "levelOrdinal": 4,
+                "stageNumber": 6,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_6_endgame_essentials_s6_rook_endgames_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_6_endgame_essentials",
+                    "groupId": "s6_rook_endgames",
+                    "levelId": "stage_6_endgame_essentials_s6_rook_endgames_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_6_endgame_essentials_s6_rook_endgames_01"
+              ]
+            },
+            {
+              "id": "stage_6_graduation_gate",
+              "title": "Graduation: Endgame Essentials Gate",
+              "chapterId": "chapter_practical_play",
+              "stageId": "stage_6_endgame_essentials",
+              "stageBand": "stage6",
+              "summary": "Finish the stage with a boss route focused on clean technical conversion.",
+              "estimatedMinutes": 9,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "advanced",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 6: Endgame Essentials. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt Endgame Essentials Gate",
+              "rewardId": "reward_stage_6_clear",
+              "milestoneId": "milestone_stage_6_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 6,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_6_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 9,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_6_endgame_essentials",
+                    "levelId": "stage_6_graduation_gate",
+                    "specialModeId": "gm_mock_match"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_6_endgame_essentials_s6_rook_endgames_02"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        }
+      ],
+      "sampleOnly": true
+    },
+    {
+      "id": "chapter_master_push",
+      "title": "Chapter 4: Master Push",
+      "subtitle": "The final stretch emphasizes resilience, discipline, and integrated decision-making.",
+      "description": "The sample pack ends with practical mastery and a final integrated stage that stops cleanly at the last available node.",
+      "difficulty": "elite",
+      "focusLabel": "Master track",
+      "stages": [
+        {
+          "id": "stage_7_practical_mastery",
+          "title": "Stage 7: Practical Mastery",
+          "subtitle": "Defend difficult positions, find counterplay, and convert edges without drifting.",
+          "description": "4 core mini-games on practical defense, only-move awareness, and safe conversion.",
+          "chapterId": "chapter_master_push",
+          "stageBand": "stage7",
+          "eloBand": {
+            "minimum": 1900,
+            "maximum": 2200,
+            "label": "1900-2200 ELO"
+          },
+          "difficulty": "elite",
+          "focusLabel": "Practical Decisions",
+          "reportedMiniGameCount": 4,
+          "rewardId": "reward_stage_7_clear",
+          "milestoneId": "milestone_stage_7_clear",
+          "groups": [
+            {
+              "id": "s7_defense_and_counterplay",
+              "title": "Defense and Counterplay",
+              "summary": "Find resilient moves before the position collapses.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_7_practical_mastery_s7_defense_and_counterplay_01",
+                "stage_7_practical_mastery_s7_defense_and_counterplay_02"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s7_conversion_under_pressure",
+              "title": "Conversion Under Pressure",
+              "summary": "Trade into safer endings and keep initiative when it matters.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_7_practical_mastery_s7_conversion_under_pressure_01",
+                "stage_7_practical_mastery_s7_conversion_under_pressure_02"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_7",
+            "title": "Graduation: Practical Mastery Gate",
+            "summary": "Finish the stage with a boss route that rewards practical resilience.",
+            "actionLabel": "Attempt Practical Mastery Gate",
+            "targetLevelId": "stage_7_graduation_gate",
+            "rewardId": "reward_stage_7_clear",
+            "milestoneId": "milestone_stage_7_clear",
+            "specialModeId": "gm_mock_match",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_7_practical_mastery_s7_defense_and_counterplay_01",
+              "title": "Defense and Counterplay: Find the Only Move",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_7_practical_mastery",
+              "stageBand": "stage7",
+              "groupId": "s7_defense_and_counterplay",
+              "summary": "Developer scaffold for defense and counterplay inside Stage 7: Practical Mastery. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "Strong practical play comes from choosing the move you can justify under real time pressure.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Defense and Counterplay",
+                "levelOrdinal": 1,
+                "stageNumber": 7,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_7_practical_mastery_s7_defense_and_counterplay_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_7_practical_mastery",
+                    "groupId": "s7_defense_and_counterplay",
+                    "levelId": "stage_7_practical_mastery_s7_defense_and_counterplay_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_6_graduation_gate"
+              ]
+            },
+            {
+              "id": "stage_7_practical_mastery_s7_defense_and_counterplay_02",
+              "title": "Defense and Counterplay: Practical Defense",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_7_practical_mastery",
+              "stageBand": "stage7",
+              "groupId": "s7_defense_and_counterplay",
+              "summary": "Developer scaffold for defense and counterplay inside Stage 7: Practical Mastery. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "Strong practical play comes from choosing the move you can justify under real time pressure.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Defense and Counterplay",
+                "levelOrdinal": 2,
+                "stageNumber": 7,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_7_practical_mastery_s7_defense_and_counterplay_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_7_practical_mastery",
+                    "groupId": "s7_defense_and_counterplay",
+                    "levelId": "stage_7_practical_mastery_s7_defense_and_counterplay_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_7_practical_mastery_s7_defense_and_counterplay_01"
+              ]
+            },
+            {
+              "id": "stage_7_practical_mastery_s7_conversion_under_pressure_01",
+              "title": "Conversion Under Pressure: Trade into Safety",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_7_practical_mastery",
+              "stageBand": "stage7",
+              "groupId": "s7_conversion_under_pressure",
+              "summary": "Developer scaffold for conversion under pressure inside Stage 7: Practical Mastery. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "Strong practical play comes from choosing the move you can justify under real time pressure.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Conversion Under Pressure",
+                "levelOrdinal": 3,
+                "stageNumber": 7,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_7_practical_mastery_s7_conversion_under_pressure_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_7_practical_mastery",
+                    "groupId": "s7_conversion_under_pressure",
+                    "levelId": "stage_7_practical_mastery_s7_conversion_under_pressure_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_7_practical_mastery_s7_defense_and_counterplay_02"
+              ]
+            },
+            {
+              "id": "stage_7_practical_mastery_s7_conversion_under_pressure_02",
+              "title": "Conversion Under Pressure: Keep the Initiative",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_7_practical_mastery",
+              "stageBand": "stage7",
+              "groupId": "s7_conversion_under_pressure",
+              "summary": "Developer scaffold for conversion under pressure inside Stage 7: Practical Mastery. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 7,
+              "levelType": "drill",
+              "kind": "drill",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "Strong practical play comes from choosing the move you can justify under real time pressure.",
+              "supportLabel": "Module drill shell",
+              "actionLabel": "Open drill placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Conversion Under Pressure",
+                "levelOrdinal": 4,
+                "stageNumber": 7,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_7_practical_mastery_s7_conversion_under_pressure_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 7,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_7_practical_mastery",
+                    "groupId": "s7_conversion_under_pressure",
+                    "levelId": "stage_7_practical_mastery_s7_conversion_under_pressure_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_7_practical_mastery_s7_conversion_under_pressure_01"
+              ]
+            },
+            {
+              "id": "stage_7_graduation_gate",
+              "title": "Graduation: Practical Mastery Gate",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_7_practical_mastery",
+              "stageBand": "stage7",
+              "summary": "Finish the stage with a boss route that rewards practical resilience.",
+              "estimatedMinutes": 9,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 7: Practical Mastery. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt Practical Mastery Gate",
+              "rewardId": "reward_stage_7_clear",
+              "milestoneId": "milestone_stage_7_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 7,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_7_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 9,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_7_practical_mastery",
+                    "levelId": "stage_7_graduation_gate",
+                    "specialModeId": "gm_mock_match"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_7_practical_mastery_s7_conversion_under_pressure_02"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        },
+        {
+          "id": "stage_8_gm_integration",
+          "title": "Stage 8: GM Integration",
+          "subtitle": "Blend opening recall, calculation discipline, prophylaxis, and tournament habits into one system.",
+          "description": "4 core mini-games that tie together the full training arc before the final graduation gate.",
+          "chapterId": "chapter_master_push",
+          "stageBand": "stage8",
+          "eloBand": {
+            "minimum": 2200,
+            "maximum": 2500,
+            "label": "2200-2500+ ELO"
+          },
+          "difficulty": "elite",
+          "focusLabel": "Integration",
+          "reportedMiniGameCount": 4,
+          "rewardId": "reward_stage_8_clear",
+          "milestoneId": "milestone_stage_8_clear",
+          "groups": [
+            {
+              "id": "s8_tournament_prep",
+              "title": "Tournament Prep",
+              "summary": "Sharpen recall and decision hygiene before the clock starts.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_8_gm_integration_s8_tournament_prep_01",
+                "stage_8_gm_integration_s8_tournament_prep_02"
+              ],
+              "sampleOnly": true
+            },
+            {
+              "id": "s8_master_decision_tests",
+              "title": "Master Decision Tests",
+              "summary": "Train prophylaxis and disciplined calculation in compact scenarios.",
+              "reportedMiniGameCount": 2,
+              "levelIds": [
+                "stage_8_gm_integration_s8_master_decision_tests_01",
+                "stage_8_gm_integration_s8_master_decision_tests_02"
+              ],
+              "sampleOnly": true
+            }
+          ],
+          "graduation": {
+            "id": "graduation_stage_8",
+            "title": "Graduation: GM Integration Gate",
+            "summary": "Finish the stage with a final boss route that caps the current sample pack cleanly.",
+            "actionLabel": "Attempt GM Integration Gate",
+            "targetLevelId": "stage_8_graduation_gate",
+            "rewardId": "reward_stage_8_clear",
+            "milestoneId": "milestone_stage_8_clear",
+            "specialModeId": "gm_mock_match",
+            "sampleOnly": true
+          },
+          "levels": [
+            {
+              "id": "stage_8_gm_integration_s8_tournament_prep_01",
+              "title": "Tournament Prep: Opening Recall Under Clock",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_8_gm_integration",
+              "stageBand": "stage8",
+              "groupId": "s8_tournament_prep",
+              "summary": "Developer scaffold for tournament prep inside Stage 8: GM Integration. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 8,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "mixed",
+              "difficulty": "elite",
+              "coachPrompt": "At the top end, the difference is rarely one tactic. It is usually better process under pressure.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Tournament Prep",
+                "levelOrdinal": 1,
+                "stageNumber": 8,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_8_gm_integration_s8_tournament_prep_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 8,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_8_gm_integration",
+                    "groupId": "s8_tournament_prep",
+                    "levelId": "stage_8_gm_integration_s8_tournament_prep_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_7_graduation_gate"
+              ]
+            },
+            {
+              "id": "stage_8_gm_integration_s8_tournament_prep_02",
+              "title": "Tournament Prep: Decision Checklist",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_8_gm_integration",
+              "stageBand": "stage8",
+              "groupId": "s8_tournament_prep",
+              "summary": "Developer scaffold for tournament prep inside Stage 8: GM Integration. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 8,
+              "levelType": "lesson",
+              "kind": "lesson",
+              "lessonType": "mixed",
+              "difficulty": "elite",
+              "coachPrompt": "At the top end, the difference is rarely one tactic. It is usually better process under pressure.",
+              "supportLabel": "Module lesson shell",
+              "actionLabel": "Open lesson placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Tournament Prep",
+                "levelOrdinal": 2,
+                "stageNumber": 8,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_8_gm_integration_s8_tournament_prep_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 8,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_8_gm_integration",
+                    "groupId": "s8_tournament_prep",
+                    "levelId": "stage_8_gm_integration_s8_tournament_prep_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_8_gm_integration_s8_tournament_prep_01"
+              ]
+            },
+            {
+              "id": "stage_8_gm_integration_s8_master_decision_tests_01",
+              "title": "Master Decision Tests: Prophylaxis Test",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_8_gm_integration",
+              "stageBand": "stage8",
+              "groupId": "s8_master_decision_tests",
+              "summary": "Developer scaffold for master decision tests inside Stage 8: GM Integration. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 8,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "At the top end, the difference is rarely one tactic. It is usually better process under pressure.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Master Decision Tests",
+                "levelOrdinal": 3,
+                "stageNumber": 8,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_8_gm_integration_s8_master_decision_tests_01_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 8,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_8_gm_integration",
+                    "groupId": "s8_master_decision_tests",
+                    "levelId": "stage_8_gm_integration_s8_master_decision_tests_01",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_8_gm_integration_s8_tournament_prep_02"
+              ]
+            },
+            {
+              "id": "stage_8_gm_integration_s8_master_decision_tests_02",
+              "title": "Master Decision Tests: Calculation Discipline",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_8_gm_integration",
+              "stageBand": "stage8",
+              "groupId": "s8_master_decision_tests",
+              "summary": "Developer scaffold for master decision tests inside Stage 8: GM Integration. Final chess content is intentionally not authored yet.",
+              "estimatedMinutes": 8,
+              "levelType": "puzzle",
+              "kind": "puzzle",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "At the top end, the difference is rarely one tactic. It is usually better process under pressure.",
+              "supportLabel": "Module puzzle shell",
+              "actionLabel": "Open puzzle placeholder",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "curriculum_stub",
+                "groupTitle": "Master Decision Tests",
+                "levelOrdinal": 4,
+                "stageNumber": 8,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_8_gm_integration_s8_master_decision_tests_02_step_01",
+                  "title": "Placeholder content step",
+                  "order": 1,
+                  "description": "Internal placeholder payload until the final chess lesson, drill, or puzzle is authored.",
+                  "estimatedMinutes": 8,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stub",
+                    "stageId": "stage_8_gm_integration",
+                    "groupId": "s8_master_decision_tests",
+                    "levelId": "stage_8_gm_integration_s8_master_decision_tests_02",
+                    "targetOutcome": "exercise_ui_and_progression"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_8_gm_integration_s8_master_decision_tests_01"
+              ]
+            },
+            {
+              "id": "stage_8_graduation_gate",
+              "title": "Graduation: GM Integration Gate",
+              "chapterId": "chapter_master_push",
+              "stageId": "stage_8_gm_integration",
+              "stageBand": "stage8",
+              "summary": "Finish the stage with a final boss route that caps the current sample pack cleanly.",
+              "estimatedMinutes": 10,
+              "levelType": "boss",
+              "kind": "boss",
+              "lessonType": "analysis",
+              "difficulty": "elite",
+              "coachPrompt": "This graduation gate is a placeholder boss route for Stage 8: GM Integration. It marks the stage boundary without locking in final chess content.",
+              "supportLabel": "Module boss shell",
+              "actionLabel": "Attempt GM Integration Gate",
+              "rewardId": "reward_stage_8_clear",
+              "milestoneId": "milestone_stage_8_clear",
+              "sampleOnly": true,
+              "payload": {
+                "placeholderKind": "stage_graduation_gate",
+                "stageNumber": 8,
+                "contentStatus": "stub"
+              },
+              "steps": [
+                {
+                  "id": "stage_8_graduation_gate_step_01",
+                  "title": "Graduation placeholder step",
+                  "order": 1,
+                  "description": "Internal placeholder payload for the stage graduation gate.",
+                  "estimatedMinutes": 10,
+                  "sampleOnly": true,
+                  "payload": {
+                    "instructionTemplate": "road_to_gm_stage_graduation_stub",
+                    "stageId": "stage_8_gm_integration",
+                    "levelId": "stage_8_graduation_gate",
+                    "specialModeId": "gm_mock_match"
+                  }
+                }
+              ],
+              "prerequisiteNodeIds": [
+                "stage_8_gm_integration_s8_master_decision_tests_02"
+              ]
+            }
+          ],
+          "sampleOnly": true
+        }
+      ],
+      "sampleOnly": true
+    }
+  ],
+  "sampleOnly": true
+}

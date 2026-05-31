@@ -1,0 +1,47 @@
+Cburnett SVG Chess Pieces
+
+Source: Wikimedia Commons
+Author: Cburnett
+License selected for Turbo Chess: BSD license
+
+Turbo Chess selects the BSD license option offered on the Wikimedia Commons
+file pages for the Cburnett SVG chess pieces.
+
+These files are BSD-licensed for Turbo Chess. They are not copyright-free.
+Commercial use, modification, and binary distribution are allowed under the
+BSD license conditions below, provided the copyright notice, license
+conditions, and disclaimer are retained.
+
+Turbo Chess does not imply endorsement by Cburnett or any contributor.
+Neither the name of Cburnett nor the names of contributors may be used to
+endorse or promote Turbo Chess without prior written permission.
+
+The Wikimedia Commons file pages identify the author as Cburnett and state
+"Source: Own work". The BSD license block on those pages states:
+
+Copyright (c) The author
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of The author nor the names of its contributors may be
+   used to endorse or promote products derived from this software without
+   specific prior written permission.
+
+This software is provided by The author and contributors "as is" and any
+express or implied warranties, including, but not limited to, the implied
+warranties of merchantability and fitness for a particular purpose are
+disclaimed. In no event shall The author and contributors be liable for any
+direct, indirect, incidental, special, exemplary, or consequential damages
+(including, but not limited to, procurement of substitute goods or services;
+loss of use, data, or profits; or business interruption) however caused and
+on any theory of liability, whether in contract, strict liability, or tort
+(including negligence or otherwise) arising in any way out of the use of this
+software, even if advised of the possibility of such damage.

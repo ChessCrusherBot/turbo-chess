@@ -1,0 +1,29 @@
+Official upstream: https://github.com/official-stockfish/Stockfish
+Official release: Stockfish 18
+Git tag: sf_18
+Git commit: cb3d4ee9b47d0c5aae855b12379378ea1439675c
+Built with: Android NDK 28.2.13676358
+Built on: 2026-04-15
+Packaged ABIs:
+- arm64-v8a
+- armeabi-v7a
+- x86_64 (debug/emulator verification)
+
+Bundled binary paths:
+- android/app/src/main/jniLibs/arm64-v8a/libstockfish.so
+- android/app/src/main/jniLibs/armeabi-v7a/libstockfish.so
+- android/app/src/main/jniLibs/x86_64/libstockfish.so
+
+Build notes:
+- lib/core/engine/BUILDING_STOCKFISH.md
+
+GPLv3 license:
+- assets/stockfish/LICENSE.txt
+- assets/legal/GPL-3.0.txt
+
+Modification statement:
+This repository does not include Stockfish source modifications.
+
+Binary provenance note:
+The project metadata records the intended upstream version. Binary equivalence
+cannot be proven from the binary alone.

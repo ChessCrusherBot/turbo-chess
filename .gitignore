@@ -1,0 +1,115 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+/coverage/
+.gradle/
+/output/
+/.playwright-cli/
+/analysis_*.jpg
+/analysis_*.png
+/analysis_embed_*.html
+/api_docs.html
+/back_to_more.xml
+/emulator_*.jpg
+/emulator_*.png
+/emulator_*.xml
+/final*.jpg
+/final*.png
+/lichess_analyse_embed.css
+/lichess_analyse_user.js
+/lichess_lib_*.js
+/more_current.xml
+/playonline_gate_current.xml
+/retest*.jpg
+/retest*.png
+/tmp_*.yaml
+/tournament_*.png
+/two_player_current.xml
+/window_dump_*.xml
+/screenshots/
+/.qwen/
+/binding_lib.json
+/navigator_lib.json
+/isolate_dump.json
+/tools/position_factory/reports/
+*.pgn
+*.pgn.zst
+*.zst
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+android/.gradle/
+android/build/
+android/app/build/
+/release_package/
+
+# Android local/signing
+local.properties
+android/local.properties
+android/key.properties
+android/keystore.properties
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+upload-keystore*
+
+# Secrets/env
+.env
+.env.*
+*.env
+secrets/
+private/
+credentials/
+service-account*.json
+*service_account*.json
+*service-account*.json
+client_secret*.json
+google-services-private.json
+
+# IDE/user local
+.vscode/
+
+# Large local Stockfish binaries - keep private/local, do not push to GitHub
+android/app/src/main/jniLibs/*/libstockfish.so

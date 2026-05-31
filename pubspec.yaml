@@ -1,0 +1,55 @@
+name: turbo_chess
+description: Turbo Chess - Offline Chess Training Platform
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.5.3
+  intl: ^0.20.2
+  google_fonts: ^6.1.0
+  audioplayers: ^6.0.0
+  google_mobile_ads: ^5.3.0
+  flutter_svg: ^2.0.10+1
+  in_app_purchase: ^3.2.3
+  url_launcher: ^6.3.2
+  font_awesome_flutter: ^11.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/positions/opening_positions.txt
+    - assets/positions/middlegame_positions.txt
+    - assets/positions/endgame_positions.txt
+    - assets/pieces/cburnett_bsd/svg/
+    - assets/pieces/cburnett_bsd/LICENSE.txt
+    - assets/pieces/cburnett_bsd/SOURCE.md
+    - assets/pieces/cburnett_bsd/VERIFICATION.md
+    - assets/sounds/chess/
+    - assets/stockfish/LICENSE.txt
+    - assets/stockfish/AUTHORS.txt
+    - assets/stockfish/STOCKFISH_SOURCE.txt
+    - assets/legal/
+
+  # Stockfish engine binaries
+  # Build from: https://github.com/official-stockfish/Stockfish
+  # See: lib/core/engine/BUILDING_STOCKFISH.md
+  # Native Stockfish is packaged from android/app/src/main/jniLibs, not from
+  # assets/stockfish.
+
+flutter_launcher_icons:
+  android: true
+  image_path: assets/branding/turbo_chess_launcher_icon.png
+  adaptive_icon_background: "#101C33"
+  adaptive_icon_foreground: assets/branding/turbo_chess_launcher_icon.png
