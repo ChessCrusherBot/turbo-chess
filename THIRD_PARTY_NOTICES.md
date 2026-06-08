@@ -1,4 +1,4 @@
-# Third-Party Notices
+﻿# Third-Party Notices
 
 This file summarizes third-party code and assets bundled with Turbo Chess. It is a source notice summary, not legal advice.
 
@@ -21,7 +21,7 @@ Turbo Chess v1 is a Flutter/Dart Android chess training app. The current Android
 * Source metadata: `assets/stockfish/STOCKFISH_SOURCE.txt`
 * Build notes: `assets/legal/STOCKFISH_BUILDING.md`
 
-Bundled Android binary paths:
+Local Android binary paths used for release builds:
 
 * `android/app/src/main/jniLibs/arm64-v8a/libstockfish.so`
 * `android/app/src/main/jniLibs/armeabi-v7a/libstockfish.so`
@@ -121,3 +121,4 @@ These Android support/build libraries are not ads, billing, analytics, login, or
 * Launcher icon generation: `flutter_launcher_icons` configuration in `pubspec.yaml`
 
 The launcher icon is treated as Turbo Chess project branding. No third-party endorsement is implied.
+
