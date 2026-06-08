@@ -95,6 +95,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         child: PositionDrillScreen(
           category: PositionCategory.opening,
           positionIndex: positionIndex,
+          resumeActiveOnOpen: args['resumeActive'] == true,
         ),
       );
 
@@ -124,6 +125,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         child: PositionDrillScreen(
           category: PositionCategory.middlegame,
           positionIndex: positionIndex,
+          resumeActiveOnOpen: args['resumeActive'] == true,
         ),
       );
 
@@ -153,6 +155,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         child: PositionDrillScreen(
           category: PositionCategory.endgame,
           positionIndex: positionIndex,
+          resumeActiveOnOpen: args['resumeActive'] == true,
         ),
       );
 
@@ -171,6 +174,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         child: PositionDrillScreen(
           category: category,
           positionIndex: positionIndex,
+          resumeActiveOnOpen: args['resumeActive'] == true,
         ),
       );
 

@@ -1,14 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:turbo_chess/core/ads/ad_free_service.dart';
-import 'package:turbo_chess/core/ads/entitlement_clock.dart';
+import 'package:turbo_chess/core/chess/chess_board.dart';
+import 'package:turbo_chess/core/design_system.dart';
 import 'package:turbo_chess/core/positions/position_category.dart';
 import 'package:turbo_chess/core/positions/position_fen_repository.dart';
 import 'package:turbo_chess/core/positions/position_progress_store.dart';
+import 'package:turbo_chess/features/train/presentation/position_drill_screen.dart';
 import 'package:turbo_chess/features/train/presentation/position_grid_screen.dart';
 
 void main() {
@@ -18,7 +16,8 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('all drill grids show fast navigation without range wording', (
+  testWidgets('all drill grids show permanent jump card without old info card',
+      (
     tester,
   ) async {
     for (final category in PositionCategory.values) {
@@ -32,11 +31,26 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      expect(
+        find.byKey(const ValueKey('permanent_jump_position_card')),
+        findsOneWidget,
+      );
+      expect(find.text('Jump to Position'), findsOneWidget);
+      expect(find.byKey(const ValueKey('jump_position_input')), findsOneWidget);
+      expect(find.byKey(const ValueKey('jump_position_go')), findsOneWidget);
       expect(find.text('Fast navigation'), findsOneWidget);
-      expect(find.byKey(const ValueKey('open_jump_position_dialog')),
-          findsOneWidget);
-      expect(find.byKey(const ValueKey('position_quick_jump_controls')),
-          findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('open_jump_position_dialog')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey('position_quick_jump_controls')),
+        findsOneWidget,
+      );
+      expect(find.text('All positions unlocked for version 1.'), findsNothing);
+      expect(find.text('Completed 0 / 3'), findsNothing);
+      expect(find.text('Locked'), findsNothing);
+      expect(find.text('Position locked'), findsNothing);
       expect(find.textContaining('Beginner to Master'), findsNothing);
       expect(find.text('Beginner'), findsNothing);
       expect(find.text('Club'), findsNothing);
@@ -46,7 +60,7 @@ void main() {
     }
   });
 
-  testWidgets('jump dialog handles exact positions and invalid input', (
+  testWidgets('permanent jump card handles exact positions and invalid input', (
     tester,
   ) async {
     await _setSurface(tester, const Size(430, 900));
@@ -60,11 +74,9 @@ void main() {
     );
     await _pumpUntilFound(
       tester,
-      find.byKey(const ValueKey('open_jump_position_dialog')),
+      find.byKey(const ValueKey('jump_position_input')),
     );
 
-    await tester.tap(find.byKey(const ValueKey('open_jump_position_dialog')));
-    await tester.pump();
     await tester.enterText(
       find.byKey(const ValueKey('jump_position_input')),
       '0',
@@ -88,9 +100,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('jump_position_go')));
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byKey(const ValueKey('position_tile_5000')), findsOneWidget);
+    _expectTileHighlighted(tester, 5000);
 
-    await tester.tap(find.byKey(const ValueKey('open_jump_position_dialog')));
-    await tester.pump();
     await tester.enterText(
       find.byKey(const ValueKey('jump_position_input')),
       '10000',
@@ -100,32 +111,19 @@ void main() {
     expect(find.byKey(const ValueKey('position_tile_10000')), findsOneWidget);
   });
 
-  testWidgets('premium user can jump and open the correct locked position', (
+  testWidgets('user can jump to and open a high position immediately', (
     tester,
   ) async {
     await _setSurface(tester, const Size(430, 900));
-    final billing = _FakeBillingClient();
-    final service = AdFreeService.forTesting(
-      clock: _FakeEntitlementClock(DateTime.utc(2026, 1, 1, 12)),
-      billingClient: billing,
-    );
-    await service.initialize();
-    await service.grantRewardedAdFreePass();
-    addTearDown(() async {
-      service.dispose();
-      await billing.dispose();
-    });
+    var navigated = false;
 
     await tester.pumpWidget(
       MaterialApp(
         onGenerateRoute: (settings) {
           if (settings.name == '/train/position/drill') {
-            final args = settings.arguments! as Map<String, dynamic>;
-            expect(args['category'], 'opening');
-            expect(args['positionIndex'], 5000);
+            navigated = true;
             return MaterialPageRoute<void>(
-              builder: (_) =>
-                  const Placeholder(key: ValueKey('opened_position_5000')),
+              builder: (_) => const Placeholder(),
             );
           }
           return null;
@@ -133,17 +131,14 @@ void main() {
         home: PositionGridScreen(
           category: PositionCategory.opening,
           repository: _repo(PositionCategory.opening, count: 10000),
-          adFreeService: service,
         ),
       ),
     );
     await _pumpUntilFound(
       tester,
-      find.byKey(const ValueKey('open_jump_position_dialog')),
+      find.byKey(const ValueKey('jump_position_input')),
     );
 
-    await tester.tap(find.byKey(const ValueKey('open_jump_position_dialog')));
-    await tester.pump();
     await tester.enterText(
       find.byKey(const ValueKey('jump_position_input')),
       '5000',
@@ -151,134 +146,32 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('jump_position_go')));
     await tester.pump(const Duration(milliseconds: 500));
 
+    expect(navigated, isFalse);
+    expect(find.byType(Placeholder), findsNothing);
+    _expectTileHighlighted(tester, 5000);
+
     await tester.tap(find.byKey(const ValueKey('position_tile_5000')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('opened_position_5000')), findsOneWidget);
+    expect(navigated, isTrue);
+    expect(find.byType(Placeholder), findsOneWidget);
+    expect(find.text('Position locked'), findsNothing);
   });
 
-  testWidgets('free locked tap shows premium dialog without rewarded ad entry',
-      (
+  testWidgets('position 2 opens without completing position 1', (
     tester,
   ) async {
     await _setSurface(tester, const Size(430, 900));
-    final billing = _FakeBillingClient();
-    final service = AdFreeService.forTesting(
-      clock: _FakeEntitlementClock(DateTime.utc(2026, 1, 1, 12)),
-      billingClient: billing,
-    );
-    await service.initialize();
-    addTearDown(() async {
-      service.dispose();
-      await billing.dispose();
-    });
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: PositionGridScreen(
-          category: PositionCategory.opening,
-          repository: _repo(PositionCategory.opening, count: 3),
-          adFreeService: service,
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const ValueKey('position_tile_2')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Unlock all positions'), findsOneWidget);
-    expect(find.text('Watch rewarded ad'), findsNothing);
-    expect(find.text('Watch Ad'), findsNothing);
-    expect(find.text('Subscribe'), findsWidgets);
-    expect(find.text('Restore Premium'), findsOneWidget);
-    expect(find.textContaining('your Google Account'), findsOneWidget);
-    expect(find.textContaining('separate app account'), findsOneWidget);
-    expect(
-      find.textContaining('Complete earlier positions to unlock it for free'),
-      findsOneWidget,
-    );
-
-    expect(service.status.isAdFree, isFalse);
-
-    const store = PositionProgressStore();
-    final progress = await store.snapshot(PositionCategory.opening);
-    expect(progress.completedCount, 0);
-    expect(progress.highestUnlockedIndex, 1);
-  });
-
-  testWidgets('subscribe option starts existing Google Play purchase flow', (
-    tester,
-  ) async {
-    await _setSurface(tester, const Size(430, 900));
-    final billing = _FakeBillingClient()
-      ..available = true
-      ..response = _productResponse();
-    final service = AdFreeService.forTesting(
-      clock: _FakeEntitlementClock(DateTime.utc(2026, 1, 1, 12)),
-      billingClient: billing,
-    );
-    await service.initialize();
-    addTearDown(() async {
-      service.dispose();
-      await billing.dispose();
-    });
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: PositionGridScreen(
-          category: PositionCategory.opening,
-          repository: _repo(PositionCategory.opening, count: 3),
-          adFreeService: service,
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const ValueKey('position_tile_2')));
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Subscribe'));
-    await tester.pump();
-    await tester.tap(find.widgetWithText(FilledButton, 'Subscribe'));
-    await tester.pumpAndSettle();
-
-    expect(billing.purchaseParams, hasLength(1));
-    expect(
-      billing.purchaseParams.single.productDetails.id,
-      AdFreeProducts.subscriptionProductId,
-    );
-    expect(service.status.isAdFree, isFalse);
-  });
-
-  testWidgets('restore premium button restores subscription without progress', (
-    tester,
-  ) async {
-    await _setSurface(tester, const Size(430, 900));
-    final billing = _FakeBillingClient()
-      ..available = true
-      ..response = _productResponse();
-    final service = AdFreeService.forTesting(
-      clock: _FakeEntitlementClock(DateTime.utc(2026, 1, 1, 12)),
-      billingClient: billing,
-    );
-    await service.initialize();
-    billing.purchasesToRestore = <PurchaseDetails>[
-      _purchase(PurchaseStatus.restored),
-    ];
-    addTearDown(() async {
-      service.dispose();
-      await billing.dispose();
-    });
+    var navigated = false;
 
     await tester.pumpWidget(
       MaterialApp(
         onGenerateRoute: (settings) {
           if (settings.name == '/train/position/drill') {
-            final args = settings.arguments! as Map<String, dynamic>;
-            expect(args['positionIndex'], 2);
+            final args = settings.arguments as Map<String, dynamic>;
+            navigated = args['positionIndex'] == 2;
             return MaterialPageRoute<void>(
-              builder: (_) =>
-                  const Placeholder(key: ValueKey('opened_position_2')),
+              builder: (_) => const Placeholder(),
             );
           }
           return null;
@@ -286,7 +179,6 @@ void main() {
         home: PositionGridScreen(
           category: PositionCategory.opening,
           repository: _repo(PositionCategory.opening, count: 3),
-          adFreeService: service,
         ),
       ),
     );
@@ -294,25 +186,157 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('position_tile_2')));
     await tester.pumpAndSettle();
-    final restoreButton =
-        find.widgetWithText(OutlinedButton, 'Restore Premium');
-    await tester.ensureVisible(restoreButton);
-    await tester.pump();
-    await tester.tap(restoreButton);
-    await tester.pumpAndSettle();
 
-    expect(service.status.hasActiveSubscription, isTrue);
-    expect(service.status.isAdFree, isTrue);
-    expect(billing.restoreCount, greaterThanOrEqualTo(1));
+    expect(navigated, isTrue);
+    expect(find.byType(Placeholder), findsOneWidget);
+    expect(find.text('Position locked'), findsNothing);
+    expect(find.text('Complete earlier positions to unlock this one.'),
+        findsNothing);
+
+    for (final forbidden in <String>[
+      'Unlock all positions',
+      '72-hour',
+      'rewarded',
+      'Subscribe',
+      'Restore Premium',
+      'subscription',
+      'purchase',
+      'Google Play',
+    ]) {
+      expect(find.textContaining(forbidden), findsNothing);
+    }
 
     const store = PositionProgressStore();
     final progress = await store.snapshot(PositionCategory.opening);
     expect(progress.completedCount, 0);
     expect(progress.highestUnlockedIndex, 1);
+  });
 
-    await tester.tap(find.byKey(const ValueKey('position_tile_2')));
+  testWidgets('completed styling changes only for Endgame grid visibility', (
+    tester,
+  ) async {
+    await _setSurface(tester, const Size(430, 900));
+
+    for (final category in PositionCategory.values) {
+      SharedPreferences.setMockInitialValues({});
+      const store = PositionProgressStore();
+      await store.markCompleted(category, 1);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PositionGridScreen(
+            category: category,
+            repository: _repo(category, count: 2),
+            progressStore: store,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final completedColor = _tileStatusColor(tester, 1, 'Completed');
+      if (category == PositionCategory.endgame) {
+        expect(completedColor, DesignSystem.warningLight);
+        expect(_tileStatusColor(tester, 2, 'Open'), DesignSystem.tertiary);
+      } else {
+        expect(completedColor, DesignSystem.successLight);
+      }
+    }
+  });
+
+  testWidgets(
+    'position drill opens a valid position with only legacy position 1 progress',
+    (tester) async {
+      await _setSurface(tester, const Size(430, 900));
+      const store = PositionProgressStore();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PositionDrillScreen(
+            category: PositionCategory.middlegame,
+            positionIndex: 2,
+            repository: _repo(PositionCategory.middlegame, count: 3),
+            progressStore: store,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ChessBoardWidget), findsOneWidget);
+      expect(find.text('Position locked'), findsNothing);
+
+      final progress = await store.snapshot(PositionCategory.middlegame);
+      expect(progress.completedCount, 0);
+      expect(progress.highestUnlockedIndex, 1);
+      expect(progress.lastPlayedIndex, 2);
+    },
+  );
+
+  testWidgets('invalid position index still fails safely', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PositionDrillScreen(
+          category: PositionCategory.endgame,
+          positionIndex: 0,
+          repository: _repo(PositionCategory.endgame, count: 3),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey('opened_position_2')), findsOneWidget);
+
+    expect(find.text('Position not found'), findsOneWidget);
+    expect(find.text('Position not found.'), findsOneWidget);
+    expect(find.byType(ChessBoardWidget), findsNothing);
+  });
+
+  test('completion progress stays category-local while access is open',
+      () async {
+    const store = PositionProgressStore();
+    await store.markCompleted(PositionCategory.opening, 1);
+
+    final openingProgress = await store.snapshot(PositionCategory.opening);
+    expect(openingProgress.isCompleted(1), isTrue);
+    expect(openingProgress.highestUnlockedIndex, 2);
+    expect(
+      PositionProgressStore.isUnlocked(
+        positionIndex: 2,
+        highestUnlockedIndex: openingProgress.highestUnlockedIndex,
+        hasPremiumAccess: false,
+      ),
+      isTrue,
+    );
+    expect(
+      PositionProgressStore.isUnlocked(
+        positionIndex: 3,
+        highestUnlockedIndex: openingProgress.highestUnlockedIndex,
+        hasPremiumAccess: false,
+      ),
+      isTrue,
+    );
+
+    for (final category in PositionCategory.values) {
+      final progress = await store.snapshot(category);
+      expect(
+        PositionProgressStore.isUnlocked(
+          positionIndex: 10000,
+          highestUnlockedIndex: progress.highestUnlockedIndex,
+          hasPremiumAccess: false,
+        ),
+        isTrue,
+        reason: '${category.id} should be open without progress',
+      );
+    }
+
+    final middlegameProgress =
+        await store.snapshot(PositionCategory.middlegame);
+    expect(
+      PositionProgressStore.isUnlocked(
+        positionIndex: 2,
+        highestUnlockedIndex: middlegameProgress.highestUnlockedIndex,
+        hasPremiumAccess: false,
+      ),
+      isTrue,
+    );
+    expect(middlegameProgress.completedCount, 0);
   });
 }
 
@@ -338,34 +362,31 @@ Future<void> _pumpUntilFound(WidgetTester tester, Finder finder) async {
   }
 }
 
-ProductDetailsResponse _productResponse() {
-  return ProductDetailsResponse(
-    productDetails: <ProductDetails>[
-      ProductDetails(
-        id: AdFreeProducts.subscriptionProductId,
-        title: 'Turbo Chess Ad-free',
-        description: 'Ad-free access',
-        price: 'USD 9.99',
-        rawPrice: 9.99,
-        currencyCode: 'USD',
-        currencySymbol: r'$',
-      ),
-    ],
-    notFoundIDs: const <String>[],
-  );
-}
-
-PurchaseDetails _purchase(PurchaseStatus status) {
-  return PurchaseDetails(
-    productID: AdFreeProducts.subscriptionProductId,
-    status: status,
-    transactionDate: DateTime.utc(2026).millisecondsSinceEpoch.toString(),
-    verificationData: PurchaseVerificationData(
-      localVerificationData: 'local',
-      serverVerificationData: 'server',
-      source: 'google_play',
+void _expectTileHighlighted(WidgetTester tester, int positionIndex) {
+  final tileFinder = find.byKey(ValueKey('position_tile_$positionIndex'));
+  final container = tester.widget<AnimatedContainer>(
+    find.descendant(
+      of: tileFinder,
+      matching: find.byType(AnimatedContainer),
     ),
   );
+  final decoration = container.decoration as BoxDecoration;
+  final border = decoration.border as Border;
+  expect(border.top.width, 2);
+}
+
+Color? _tileStatusColor(
+  WidgetTester tester,
+  int positionIndex,
+  String statusText,
+) {
+  final tileFinder = find.byKey(ValueKey('position_tile_$positionIndex'));
+  final statusFinder = find.descendant(
+    of: tileFinder,
+    matching: find.text(statusText),
+  );
+  final status = tester.widget<Text>(statusFinder);
+  return status.style?.color;
 }
 
 class _FakeCountPositionRepository extends PositionFenRepository {
@@ -379,64 +400,4 @@ class _FakeCountPositionRepository extends PositionFenRepository {
   @override
   Future<String> loadFen(PositionCategory category, int positionIndex) async =>
       '8/8/8/4k3/8/4K3/4P3/8 w - - 0 1';
-}
-
-class _FakeEntitlementClock implements EntitlementClock {
-  final DateTime now;
-
-  const _FakeEntitlementClock(this.now);
-
-  @override
-  Future<EntitlementTimeSnapshot> snapshot() async {
-    return EntitlementTimeSnapshot(
-      deviceUtc: now,
-      elapsedRealtimeMillis: 1000,
-    );
-  }
-}
-
-class _FakeBillingClient implements AdFreeBillingClient {
-  final StreamController<List<PurchaseDetails>> _controller =
-      StreamController<List<PurchaseDetails>>.broadcast();
-
-  bool available = false;
-  ProductDetailsResponse response = ProductDetailsResponse(
-    productDetails: const <ProductDetails>[],
-    notFoundIDs: const <String>[AdFreeProducts.subscriptionProductId],
-  );
-  List<PurchaseDetails> purchasesToRestore = const <PurchaseDetails>[];
-  final List<PurchaseParam> purchaseParams = <PurchaseParam>[];
-  int restoreCount = 0;
-
-  @override
-  Stream<List<PurchaseDetails>> get purchaseStream => _controller.stream;
-
-  @override
-  Future<bool> isAvailable() async => available;
-
-  @override
-  Future<ProductDetailsResponse> queryProductDetails(
-    Set<String> identifiers,
-  ) async {
-    return response;
-  }
-
-  @override
-  Future<bool> buyNonConsumable({
-    required PurchaseParam purchaseParam,
-  }) async {
-    purchaseParams.add(purchaseParam);
-    return true;
-  }
-
-  @override
-  Future<List<PurchaseDetails>> restorePurchases() async {
-    restoreCount += 1;
-    return List<PurchaseDetails>.of(purchasesToRestore);
-  }
-
-  @override
-  Future<void> completePurchase(PurchaseDetails purchase) async {}
-
-  Future<void> dispose() => _controller.close();
 }

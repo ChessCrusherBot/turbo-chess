@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/ads/ad_free_service.dart';
-import '../../../core/ads/ad_free_status_widgets.dart';
 import '../../../core/ads/ad_shell.dart';
-import '../../../core/design/turbo_icons.dart';
 import '../../../core/design_system.dart';
 import '../../../core/positions/position_category.dart';
 import '../../../core/positions/position_fen_repository.dart';
@@ -15,14 +12,12 @@ class PositionGridScreen extends StatefulWidget {
   final PositionCategory category;
   final PositionFenRepository? repository;
   final PositionProgressStore progressStore;
-  final AdFreeService? adFreeService;
 
   const PositionGridScreen({
     super.key,
     required this.category,
     this.repository,
     this.progressStore = const PositionProgressStore(),
-    this.adFreeService,
   });
 
   @override
@@ -31,12 +26,13 @@ class PositionGridScreen extends StatefulWidget {
 
 class _PositionGridScreenState extends State<PositionGridScreen> {
   late final PositionFenRepository _repository;
-  late final AdFreeService _adFreeService;
   late final ScrollController _scrollController;
+  late final TextEditingController _jumpController;
   late Future<_PositionGridSnapshot> _snapshotFuture;
   _PositionGridMetrics? _gridMetrics;
   Timer? _highlightTimer;
   int? _highlightedPosition;
+  String? _jumpErrorText;
 
   Color get _accentColor => switch (widget.category) {
         PositionCategory.opening => DesignSystem.primary,
@@ -44,32 +40,21 @@ class _PositionGridScreenState extends State<PositionGridScreen> {
         PositionCategory.endgame => DesignSystem.tertiary,
       };
 
-  TurboIconKind get _iconKind => switch (widget.category) {
-        PositionCategory.opening => TurboIconKind.moduleOpenings,
-        PositionCategory.middlegame => TurboIconKind.moduleMiddlegame,
-        PositionCategory.endgame => TurboIconKind.moduleEndgame,
-      };
-
   @override
   void initState() {
     super.initState();
     _repository = widget.repository ?? PositionFenRepository();
-    _adFreeService = widget.adFreeService ?? AdFreeService.instance;
     _scrollController = ScrollController();
+    _jumpController = TextEditingController();
     _snapshotFuture = _loadSnapshot();
-    _adFreeService.addListener(_handlePremiumChanged);
   }
 
   @override
   void dispose() {
-    _adFreeService.removeListener(_handlePremiumChanged);
     _highlightTimer?.cancel();
+    _jumpController.dispose();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _handlePremiumChanged() {
-    if (mounted) setState(() {});
   }
 
   Future<_PositionGridSnapshot> _loadSnapshot() async {
@@ -90,13 +75,7 @@ class _PositionGridScreenState extends State<PositionGridScreen> {
 
   Future<void> _openPosition({
     required int positionIndex,
-    required bool unlocked,
   }) async {
-    if (!unlocked) {
-      await _showLockedPositionDialog(positionIndex);
-      return;
-    }
-
     await Navigator.pushNamed(
       context,
       '/train/position/drill',
@@ -107,38 +86,6 @@ class _PositionGridScreenState extends State<PositionGridScreen> {
     );
 
     if (mounted) _refreshProgress();
-  }
-
-  Future<void> _showLockedPositionDialog(int positionIndex) async {
-    final unlocked = await showDialog<bool>(
-      context: context,
-      barrierDismissible: true,
-      builder: (dialogContext) => _LockedPositionPremiumDialog(
-        positionIndex: positionIndex,
-        categoryTitle: widget.category.title,
-        adFreeService: _adFreeService,
-      ),
-    );
-
-    if (!mounted) return;
-    if (unlocked == true) {
-      _refreshProgress();
-      _showSnackBar('Premium access active. All positions are unlocked.',
-          success: true);
-    }
-  }
-
-  void _showSnackBar(String message, {required bool success}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: success
-            ? DesignSystem.backgroundElevated
-            : DesignSystem.errorContainer,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
   }
 
   void _jumpToPosition(int positionIndex, int availableCount) {
@@ -168,71 +115,20 @@ class _PositionGridScreenState extends State<PositionGridScreen> {
     });
   }
 
-  Future<void> _showJumpDialog(int availableCount) async {
-    final controller = TextEditingController();
-    final target = await showDialog<int>(
-      context: context,
-      builder: (dialogContext) {
-        String? errorText;
-        return StatefulBuilder(
-          builder: (dialogContext, setDialogState) {
-            return AlertDialog(
-              backgroundColor: DesignSystem.backgroundRaised,
-              title: const Text('Jump to position'),
-              content: TextField(
-                key: const ValueKey('jump_position_input'),
-                controller: controller,
-                autofocus: true,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Position number',
-                  hintText: '1-$availableCount',
-                  errorText: errorText,
-                  border: const OutlineInputBorder(),
-                ),
-                onSubmitted: (_) {
-                  final parsed = int.tryParse(controller.text.trim());
-                  if (parsed == null || parsed < 1 || parsed > availableCount) {
-                    setDialogState(() {
-                      errorText = 'Enter a number from 1 to $availableCount.';
-                    });
-                    return;
-                  }
-                  Navigator.pop(dialogContext, parsed);
-                },
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('Cancel'),
-                ),
-                FilledButton(
-                  key: const ValueKey('jump_position_go'),
-                  onPressed: () {
-                    final parsed = int.tryParse(controller.text.trim());
-                    if (parsed == null ||
-                        parsed < 1 ||
-                        parsed > availableCount) {
-                      setDialogState(() {
-                        errorText = 'Enter a number from 1 to $availableCount.';
-                      });
-                      return;
-                    }
-                    Navigator.pop(dialogContext, parsed);
-                  },
-                  child: const Text('Jump'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-    controller.dispose();
-
-    if (target != null && mounted) {
-      _jumpToPosition(target, availableCount);
+  void _submitJump(int availableCount) {
+    final parsed = int.tryParse(_jumpController.text.trim());
+    if (parsed == null || parsed < 1 || parsed > availableCount) {
+      setState(() {
+        _jumpErrorText = 'Enter a number from 1 to $availableCount.';
+      });
+      return;
     }
+
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _jumpErrorText = null;
+    });
+    _jumpToPosition(parsed, availableCount);
   }
 
   @override
@@ -267,36 +163,32 @@ class _PositionGridScreenState extends State<PositionGridScreen> {
               );
             }
 
-            final hasPremiumAccess = _adFreeService.status.isAdFree;
-
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
-                  child: _PositionGridHeader(
-                    category: widget.category,
+                  child: _PositionJumpCard(
                     color: _accentColor,
-                    iconKind: _iconKind,
                     availableCount: data.availableCount,
-                    highestUnlockedIndex: data.progress.highestUnlockedIndex,
-                    hasPremiumAccess: hasPremiumAccess,
+                    controller: _jumpController,
+                    errorText: _jumpErrorText,
+                    onChanged: (_) {
+                      if (_jumpErrorText != null) {
+                        setState(() => _jumpErrorText = null);
+                      }
+                    },
+                    onSubmitted: () => _submitJump(data.availableCount),
                   ),
-                ),
-                const AdFreeCompactStatusLine(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                   child: _PositionFastNavigation(
                     availableCount: data.availableCount,
-                    highestUnlockedIndex: data.progress.highestUnlockedIndex,
-                    hasPremiumAccess: hasPremiumAccess,
+                    lastPlayedIndex: data.progress.lastPlayedIndex,
                     color: _accentColor,
                     onQuickJump: (positionIndex) =>
                         _jumpToPosition(positionIndex, data.availableCount),
-                    onOpenJumpDialog: () =>
-                        unawaited(_showJumpDialog(data.availableCount)),
                   ),
                 ),
                 Expanded(
@@ -324,31 +216,21 @@ class _PositionGridScreenState extends State<PositionGridScreen> {
                           itemCount: data.availableCount,
                           itemBuilder: (context, index) {
                             final positionIndex = index + 1;
-                            final unlocked = PositionProgressStore.isUnlocked(
-                              positionIndex: positionIndex,
-                              highestUnlockedIndex:
-                                  data.progress.highestUnlockedIndex,
-                              hasPremiumAccess: hasPremiumAccess,
-                            );
                             final completed =
                                 data.progress.isCompleted(positionIndex);
                             final current = !completed &&
-                                !hasPremiumAccess &&
-                                positionIndex ==
-                                    data.progress.highestUnlockedIndex;
+                                positionIndex == data.progress.lastPlayedIndex;
 
                             return _PositionTile(
                               positionIndex: positionIndex,
+                              category: widget.category,
                               color: _accentColor,
-                              unlocked: unlocked,
                               completed: completed,
                               current: current,
-                              premiumUnlocked: hasPremiumAccess && !completed,
                               highlighted:
                                   _highlightedPosition == positionIndex,
                               onTap: () => _openPosition(
                                 positionIndex: positionIndex,
-                                unlocked: unlocked,
                               ),
                             );
                           },
@@ -376,82 +258,135 @@ class _PositionGridSnapshot {
   });
 }
 
-class _PositionGridHeader extends StatelessWidget {
-  final PositionCategory category;
+class _PositionJumpCard extends StatelessWidget {
   final Color color;
-  final TurboIconKind iconKind;
   final int availableCount;
-  final int highestUnlockedIndex;
-  final bool hasPremiumAccess;
+  final TextEditingController controller;
+  final String? errorText;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSubmitted;
 
-  const _PositionGridHeader({
-    required this.category,
+  const _PositionJumpCard({
     required this.color,
-    required this.iconKind,
     required this.availableCount,
-    required this.highestUnlockedIndex,
-    required this.hasPremiumAccess,
+    required this.controller,
+    required this.errorText,
+    required this.onChanged,
+    required this.onSubmitted,
   });
 
   @override
   Widget build(BuildContext context) {
-    final unlockedThrough = hasPremiumAccess
-        ? availableCount
-        : highestUnlockedIndex.clamp(1, availableCount).toInt();
-
     return DecoratedBox(
+      key: const ValueKey('permanent_jump_position_card'),
       decoration: BoxDecoration(
-        color: DesignSystem.backgroundRaised,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            color.withAlpha(26),
+            DesignSystem.backgroundRaised,
+          ],
+        ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color.withAlpha(70)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TurboIconBadge(
-              kind: iconKind,
-              color: color,
-              size: 52,
-              iconSize: 29,
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    category.title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: DesignSystem.textPrimary,
-                          fontWeight: FontWeight.w900,
-                        ),
+            Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: color.withAlpha(28),
+                    borderRadius: BorderRadius.circular(13),
+                    border: Border.all(color: color.withAlpha(82)),
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '$availableCount training positions',
-                    style: const TextStyle(
-                      color: DesignSystem.textMuted,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.keyboard_tab_rounded,
+                    color: color,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Expanded(
+                  child: Text(
+                    'Jump to Position',
+                    style: TextStyle(
+                      color: DesignSystem.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    hasPremiumAccess
-                        ? 'Premium unlocks all positions'
-                        : 'Unlocked through Position $unlockedThrough',
-                    style: TextStyle(
-                      color: hasPremiumAccess
-                          ? DesignSystem.secondary
-                          : DesignSystem.textSecondary,
-                      fontSize: 12,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: TextField(
+                    key: const ValueKey('jump_position_input'),
+                    controller: controller,
+                    autofocus: false,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.go,
+                    style: const TextStyle(
+                      color: DesignSystem.textPrimary,
                       fontWeight: FontWeight.w800,
                     ),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      labelText: 'Position number',
+                      hintText: '1-$availableCount',
+                      errorText: errorText,
+                      prefixIcon: Icon(Icons.tag_rounded, color: color),
+                      filled: true,
+                      fillColor: DesignSystem.backgroundBase.withAlpha(150),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(color: color.withAlpha(65)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(color: color, width: 1.5),
+                      ),
+                    ),
+                    onChanged: onChanged,
+                    onSubmitted: (_) => onSubmitted(),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  height: 48,
+                  child: FilledButton.icon(
+                    key: const ValueKey('jump_position_go'),
+                    onPressed: onSubmitted,
+                    icon: const Icon(Icons.arrow_downward_rounded, size: 18),
+                    label: const Text('Jump'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: color,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -462,26 +397,20 @@ class _PositionGridHeader extends StatelessWidget {
 
 class _PositionFastNavigation extends StatelessWidget {
   final int availableCount;
-  final int highestUnlockedIndex;
-  final bool hasPremiumAccess;
+  final int lastPlayedIndex;
   final Color color;
   final ValueChanged<int> onQuickJump;
-  final VoidCallback onOpenJumpDialog;
 
   const _PositionFastNavigation({
     required this.availableCount,
-    required this.highestUnlockedIndex,
-    required this.hasPremiumAccess,
+    required this.lastPlayedIndex,
     required this.color,
     required this.onQuickJump,
-    required this.onOpenJumpDialog,
   });
 
   @override
   Widget build(BuildContext context) {
-    final currentIndex = hasPremiumAccess
-        ? availableCount
-        : highestUnlockedIndex.clamp(1, availableCount).toInt();
+    final currentIndex = lastPlayedIndex.clamp(1, availableCount).toInt();
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -507,12 +436,6 @@ class _PositionFastNavigation extends StatelessWidget {
                     ),
                   ),
                 ),
-                TextButton.icon(
-                  key: const ValueKey('open_jump_position_dialog'),
-                  onPressed: onOpenJumpDialog,
-                  icon: const Icon(Icons.keyboard_tab_rounded, size: 18),
-                  label: const Text('Jump'),
-                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -526,7 +449,7 @@ class _PositionFastNavigation extends StatelessWidget {
                   onTap: () => onQuickJump(1),
                 ),
                 _QuickJumpChip(
-                  label: 'Current',
+                  label: 'Last played',
                   onTap: () => onQuickJump(currentIndex),
                 ),
                 _QuickJumpChip(
@@ -605,431 +528,52 @@ class _PositionGridMetrics {
   }
 }
 
-class _LockedPositionPremiumDialog extends StatefulWidget {
-  final int positionIndex;
-  final String categoryTitle;
-  final AdFreeService adFreeService;
-
-  const _LockedPositionPremiumDialog({
-    required this.positionIndex,
-    required this.categoryTitle,
-    required this.adFreeService,
-  });
-
-  @override
-  State<_LockedPositionPremiumDialog> createState() =>
-      _LockedPositionPremiumDialogState();
-}
-
-class _LockedPositionPremiumDialogState
-    extends State<_LockedPositionPremiumDialog> {
-  bool _subscribing = false;
-  bool _restoring = false;
-  String? _message;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.adFreeService.addListener(_handlePremiumChanged);
-  }
-
-  @override
-  void dispose() {
-    widget.adFreeService.removeListener(_handlePremiumChanged);
-    super.dispose();
-  }
-
-  void _handlePremiumChanged() {
-    if (!mounted || !widget.adFreeService.status.isAdFree) return;
-    _closeWithPremiumAccess();
-  }
-
-  void _closeWithPremiumAccess() {
-    if (!mounted) return;
-    final navigator = Navigator.of(context);
-    if (navigator.canPop()) {
-      navigator.pop(true);
-    }
-  }
-
-  Future<void> _subscribe() async {
-    if (_subscribing || _restoring) return;
-    setState(() {
-      _subscribing = true;
-      _message = null;
-    });
-
-    await widget.adFreeService.subscribeAdFree();
-    if (!mounted) return;
-    final status = widget.adFreeService.status;
-    if (status.isAdFree) {
-      _closeWithPremiumAccess();
-      return;
-    }
-
-    setState(() {
-      _subscribing = false;
-      _message = status.subscriptionError ??
-          status.subscriptionMessage ??
-          'Complete the purchase in Google Play.';
-    });
-  }
-
-  Future<void> _restorePremium() async {
-    if (_subscribing || _restoring) return;
-    setState(() {
-      _restoring = true;
-      _message = null;
-    });
-
-    final result = await widget.adFreeService.restorePremium();
-    if (!mounted) return;
-    if (widget.adFreeService.status.isAdFree) {
-      _closeWithPremiumAccess();
-      return;
-    }
-
-    setState(() {
-      _restoring = false;
-      _message = result.status == PremiumRestoreStatus.notFound
-          ? PremiumSubscriptionCopy.restoreTroubleshootingMessage
-          : result.message;
-    });
-  }
-
-  void _showHowRestoreWorks() {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: DesignSystem.backgroundRaised,
-        title: const Text('How restore works'),
-        content: const Text(PremiumSubscriptionCopy.accountNoticeLong),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final maxHeight = MediaQuery.sizeOf(context).height * 0.86;
-
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 430, maxHeight: maxHeight),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: DesignSystem.backgroundRaised,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: DesignSystem.warningLight.withAlpha(110)),
-            boxShadow: DesignSystem.shadowLg,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: DesignSystem.warningLight.withAlpha(26),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: const Icon(
-                          Icons.workspace_premium_rounded,
-                          color: DesignSystem.warningLight,
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Unlock all positions',
-                              style: TextStyle(
-                                color: DesignSystem.textPrimary,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              '${widget.categoryTitle} Position ${widget.positionIndex} is locked.',
-                              style: const TextStyle(
-                                color: DesignSystem.textMuted,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-                  const Text(
-                    'Complete earlier positions to unlock it for free, or use Premium to unlock every position instantly.',
-                    style: TextStyle(
-                      color: DesignSystem.textSecondary,
-                      height: 1.4,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  const _PremiumDialogInfoBox(
-                    text: PremiumSubscriptionCopy.accountNotice,
-                  ),
-                  const SizedBox(height: 12),
-                  _PremiumDialogOption(
-                    icon: Icons.shopping_bag_outlined,
-                    title: 'Subscribe',
-                    subtitle:
-                        'Unlock all positions and remove ads while subscribed.',
-                    color: DesignSystem.primaryLight,
-                    buttonLabel: 'Subscribe',
-                    loading: _subscribing,
-                    onPressed: _subscribing || _restoring
-                        ? null
-                        : () => unawaited(_subscribe()),
-                  ),
-                  const SizedBox(height: 10),
-                  OutlinedButton.icon(
-                    onPressed: _subscribing || _restoring
-                        ? null
-                        : () => unawaited(_restorePremium()),
-                    icon: _restoring
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.restore_rounded, size: 18),
-                    label: const Text('Restore Premium'),
-                  ),
-                  TextButton.icon(
-                    onPressed: _subscribing || _restoring
-                        ? null
-                        : _showHowRestoreWorks,
-                    icon: const Icon(Icons.help_outline_rounded, size: 18),
-                    label: const Text('How restore works'),
-                  ),
-                  if (_message != null) ...[
-                    const SizedBox(height: 12),
-                    Text(
-                      _message!,
-                      style: const TextStyle(
-                        color: DesignSystem.warningLight,
-                        height: 1.35,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 12),
-                  const Text(
-                    'You can also continue free by completing the previous positions.',
-                    style: TextStyle(
-                      color: DesignSystem.textMuted,
-                      fontSize: 12,
-                      height: 1.35,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  TextButton(
-                    onPressed: _subscribing || _restoring
-                        ? null
-                        : () => Navigator.pop(context, false),
-                    child: const Text('Not now'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PremiumDialogInfoBox extends StatelessWidget {
-  final String text;
-
-  const _PremiumDialogInfoBox({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: DesignSystem.backgroundBase.withAlpha(120),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: DesignSystem.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: DesignSystem.textSecondary,
-            fontSize: 12,
-            height: 1.35,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PremiumDialogOption extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final String buttonLabel;
-  final bool loading;
-  final VoidCallback? onPressed;
-
-  const _PremiumDialogOption({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.buttonLabel,
-    required this.loading,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: DesignSystem.backgroundSurface,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: color.withAlpha(70)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, color: color, size: 24),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: DesignSystem.textPrimary,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          color: DesignSystem.textMuted,
-                          fontSize: 12.5,
-                          height: 1.35,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            FilledButton(
-              onPressed: onPressed,
-              child: loading
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(buttonLabel),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _PositionTile extends StatelessWidget {
   final int positionIndex;
+  final PositionCategory category;
   final Color color;
-  final bool unlocked;
   final bool completed;
   final bool current;
-  final bool premiumUnlocked;
   final bool highlighted;
   final VoidCallback onTap;
 
   const _PositionTile({
     required this.positionIndex,
+    required this.category,
     required this.color,
-    required this.unlocked,
     required this.completed,
     required this.current,
-    required this.premiumUnlocked,
     required this.highlighted,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final tileColor = unlocked
-        ? DesignSystem.backgroundRaised
-        : DesignSystem.backgroundElevated.withAlpha(130);
-    final foreground = unlocked
-        ? DesignSystem.textPrimary
-        : DesignSystem.textMuted.withAlpha(180);
-    final statusIcon = completed
-        ? Icons.check_circle_rounded
-        : unlocked
-            ? Icons.play_circle_fill_rounded
-            : Icons.lock_rounded;
-    final statusColor = completed
-        ? DesignSystem.successLight
-        : unlocked
-            ? color
-            : DesignSystem.textMuted;
+    final endgameCompleted = completed && category == PositionCategory.endgame;
+    final tileColor = endgameCompleted
+        ? const Color(0xFF241F16)
+        : DesignSystem.backgroundRaised;
+    const foreground = DesignSystem.textPrimary;
+    final statusIcon =
+        completed ? Icons.check_circle_rounded : Icons.play_circle_fill_rounded;
+    final completedColor = endgameCompleted
+        ? DesignSystem.warningLight
+        : DesignSystem.successLight;
+    final statusColor = completed ? completedColor : color;
     final borderColor = highlighted
         ? DesignSystem.warningLight
-        : unlocked
-            ? color.withAlpha(76)
-            : DesignSystem.border;
+        : endgameCompleted
+            ? completedColor.withAlpha(168)
+            : color.withAlpha(76);
     final statusLabel = completed
         ? 'Completed'
-        : premiumUnlocked
-            ? 'Premium'
-            : current
-                ? 'Current'
-                : unlocked
-                    ? 'Current'
-                    : 'Locked';
+        : current
+            ? 'Last played'
+            : 'Open';
 
     return Semantics(
       button: true,
-      enabled: unlocked,
+      enabled: true,
       label: 'Position $positionIndex $statusLabel',
       child: InkWell(
         key: ValueKey('position_tile_$positionIndex'),
@@ -1051,9 +595,15 @@ class _PositionTile extends StatelessWidget {
                       offset: const Offset(0, 6),
                     ),
                   ]
-                : unlocked
-                    ? DesignSystem.shadowSm
-                    : const [],
+                : endgameCompleted
+                    ? [
+                        BoxShadow(
+                          color: DesignSystem.warningLight.withAlpha(24),
+                          blurRadius: 16,
+                          offset: const Offset(0, 5),
+                        ),
+                      ]
+                    : DesignSystem.shadowSm,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1062,12 +612,6 @@ class _PositionTile extends StatelessWidget {
                 children: [
                   Icon(statusIcon, color: statusColor, size: 20),
                   const Spacer(),
-                  if (premiumUnlocked)
-                    const Icon(
-                      Icons.workspace_premium_rounded,
-                      color: DesignSystem.secondary,
-                      size: 18,
-                    ),
                 ],
               ),
               const Spacer(),
@@ -1082,7 +626,7 @@ class _PositionTile extends StatelessWidget {
               const SizedBox(height: 1),
               Text(
                 '$positionIndex',
-                style: TextStyle(
+                style: const TextStyle(
                   color: foreground,
                   fontSize: 24,
                   fontWeight: FontWeight.w900,

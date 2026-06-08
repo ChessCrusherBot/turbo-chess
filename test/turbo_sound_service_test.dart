@@ -52,6 +52,22 @@ void main() {
     expect(service.debugSoundPlayCount, 1);
   });
 
+  test('rapid repeated sound requests are all forwarded', () async {
+    await service.initialize();
+
+    for (var i = 0; i < 12; i += 1) {
+      service.playMove();
+    }
+    await _flushSoundTasks();
+
+    expect(backend.playedEvents, hasLength(12));
+    expect(
+      backend.playedEvents,
+      everyElement(equals(TurboSoundEvent.move)),
+    );
+    expect(service.debugSoundPlayCount, 12);
+  });
+
   test('missing audio file does not crash initialization or playback',
       () async {
     backend.throwOnInitialize = true;
@@ -140,7 +156,7 @@ void main() {
     expect(globalContexts, [
       AudioplayersTurboSoundBackend.soundEffectAudioContext,
     ]);
-    expect(fakePlayers, hasLength(TurboSoundEvent.values.length * 3));
+    expect(fakePlayers, hasLength(TurboSoundEvent.values.length * 2));
     for (final player in fakePlayers) {
       expect(player.audioContexts, [
         AudioplayersTurboSoundBackend.soundEffectAudioContext,
@@ -148,6 +164,47 @@ void main() {
       expect(player.playerModes, [PlayerMode.lowLatency]);
       expect(player.releaseModes, [ReleaseMode.stop]);
       expect(player.sources.single, isA<AssetSource>());
+    }
+
+    await backend.dispose();
+  });
+
+  test('audioplayers backend rotates players and re-arms source per play',
+      () async {
+    final fakePlayers = <_FakeSoundEffectPlayer>[];
+    final backend = AudioplayersTurboSoundBackend(
+      playerFactory: (event, index, cache) {
+        final player = _FakeSoundEffectPlayer(event: event, index: index);
+        fakePlayers.add(player);
+        return player;
+      },
+      assetPreloader: (paths) async => const <Uri>[],
+      globalAudioContextSetter: (context) async {},
+    );
+
+    await backend.initialize(TurboSoundService.soundAssets);
+    for (var i = 0; i < 7; i += 1) {
+      await backend.play(TurboSoundEvent.move);
+    }
+
+    final movePlayers = fakePlayers
+        .where((player) => player.event == TurboSoundEvent.move)
+        .toList();
+    expect(movePlayers, hasLength(2));
+    expect(movePlayers.map((player) => player.stopCount).toList(), [
+      4,
+      3,
+    ]);
+    expect(movePlayers.map((player) => player.resumeCount).toList(), [
+      4,
+      3,
+    ]);
+    expect(movePlayers.map((player) => player.sources.length).toList(), [
+      5,
+      4,
+    ]);
+    for (final player in movePlayers) {
+      expect(player.sources, everyElement(isA<AssetSource>()));
     }
 
     await backend.dispose();

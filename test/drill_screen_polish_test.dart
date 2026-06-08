@@ -95,9 +95,12 @@ void main() {
     expect(master.skillLevel, 20);
     expect(master.limitStrength, isFalse);
     expect(master.ponder, isFalse);
+    expect(master.threads, 1);
+    expect(master.hashMb, 32);
 
     expect(maxLowEnd.depth, 22);
     expect(maxLowEnd.threads, 1);
+    expect(maxLowEnd.hashMb, 48);
     expect(maxFlagship.depth, 26);
     expect(maxFlagship.hashMb, 128);
   });
@@ -178,6 +181,39 @@ void main() {
     expect(find.text('Advanced'), findsNothing);
     expect(find.text('Master'), findsNothing);
     expect(find.text('You are White'), findsOneWidget);
+  });
+
+  testWidgets('active drill controls hide standalone Next button',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(430, 900);
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: DrillDetailBaseScreen.position(
+          category: PositionCategory.opening,
+          positionIndex: 1,
+          fen: _testDrill.fen,
+          totalPositions: 2,
+          color: Colors.deepPurple,
+          engineMoveProvider: (_, __, ___) async => null,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Engine: Strong'), findsOneWidget);
+    expect(find.text('Reset'), findsOneWidget);
+    expect(find.text('Flip'), findsOneWidget);
+    expect(find.text('Bookmark'), findsOneWidget);
+    expect(find.text('Resign'), findsOneWidget);
+    expect(find.text('Next'), findsNothing);
+    expect(find.text('Next Position'), findsNothing);
   });
 
   testWidgets('engine thinking chip animates dots safely', (tester) async {

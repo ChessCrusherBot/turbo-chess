@@ -10,61 +10,43 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     TurboSoundService.instance.debugResetForTesting();
   });
 
-  testWidgets('More screen shows ad-free options without crashing', (
+  testWidgets('More screen shows tools without monetization UI', (
     tester,
   ) async {
-    SharedPreferences.setMockInitialValues({});
-
     await tester.pumpWidget(
       const MaterialApp(
         home: MoreScreen(),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(find.text('Premium Status'), findsOneWidget);
-    expect(find.text('Ad-free access'), findsNothing);
-    expect(find.text('Free access'), findsOneWidget);
-    expect(find.text('Ads active'), findsOneWidget);
-    expect(find.text('Subscribe ad-free'), findsOneWidget);
-    expect(find.text('3-Day Premium Pass'), findsOneWidget);
-    expect(find.text('24-Hour Premium Pass'), findsNothing);
+    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('How to Play'), findsOneWidget);
+    expect(find.text('Legal'), findsOneWidget);
+    expect(find.text('About'), findsOneWidget);
     expect(find.byType(Icon), findsWidgets);
-    expect(
-      find.text(
-        'Unlock all positions and remove ads for 3 days.',
-      ),
-      findsOneWidget,
-    );
-    expect(find.textContaining('24 hours'), findsNothing);
-    expect(find.text('Restore Premium'), findsOneWidget);
-    expect(find.text('How restore works'), findsOneWidget);
-    expect(
-      find.text(
-        'Google Play Billing is unavailable right now. Please try again later.',
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.textContaining('linked to your Google Account'),
-      findsOneWidget,
-    );
-    expect(
-      find.textContaining('Turbo Chess does not create a separate app account'),
-      findsOneWidget,
-    );
-    expect(find.textContaining('one phone only'), findsNothing);
-    expect(find.textContaining('one device only'), findsNothing);
-    expect(find.textContaining('7' + '-day'), findsNothing);
-    expect(find.textContaining('7 ' + 'days'), findsNothing);
-    expect(find.textContaining('seven ' + 'days'), findsNothing);
+
+    for (final forbidden in <String>[
+      'Access Status',
+      'Ad-free access',
+      'Free access',
+      'Ads active',
+      '72-Hour Rewarded Pass',
+      'Watch rewarded ad',
+      'Subscribe',
+      'Restore Premium',
+      'Manage subscription',
+      'Google Play',
+    ]) {
+      expect(find.textContaining(forbidden), findsNothing);
+    }
   });
 
-  testWidgets('More screen premium layout fits small phones', (tester) async {
-    SharedPreferences.setMockInitialValues({});
+  testWidgets('More screen tools layout fits small phones', (tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 640);
     addTearDown(() {
@@ -80,9 +62,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Premium Status'), findsOneWidget);
-    expect(find.text('Subscription'), findsOneWidget);
-    expect(find.text('3-Day Premium Pass'), findsOneWidget);
+    expect(find.text('Subscribe'), findsNothing);
 
     await tester.scrollUntilVisible(
       find.text('About'),
@@ -99,14 +79,12 @@ void main() {
   });
 
   testWidgets('More screen has no review or gamification UI', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-
     await tester.pumpWidget(
       const MaterialApp(
         home: MoreScreen(),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     for (final forbidden in <String>[
       'Game Review',
@@ -121,7 +99,6 @@ void main() {
 
   testWidgets('More page option order is Settings, How to Play, Legal, About',
       (tester) async {
-    SharedPreferences.setMockInitialValues({});
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(430, 1800);
     addTearDown(() {
@@ -148,8 +125,6 @@ void main() {
   });
 
   testWidgets('How to Play and About still open from More', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-
     await tester.pumpWidget(
       const MaterialApp(
         home: MoreScreen(),
@@ -181,22 +156,29 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Turbo Chess'), findsOneWidget);
     expect(
-      find.text(
-          'Offline chess training with playable drills and engine replies.'),
+      find.textContaining('Version 1.0.0'),
       findsOneWidget,
     );
+    expect(
+      find.textContaining('Offline chess training with playable drills'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('free and ad-free'), findsOneWidget);
+    expect(find.textContaining('does not use login, accounts'), findsOneWidget);
+    expect(find.textContaining('analytics'), findsOneWidget);
+    expect(find.textContaining('cloud sync'), findsOneWidget);
+    expect(find.textContaining('in-app payments'), findsOneWidget);
+    expect(find.textContaining('stored locally'), findsOneWidget);
   });
 
-  testWidgets('More Legal notice includes GPLv3 and asset notices',
+  testWidgets('More Legal notice is clean and keeps required notices',
       (tester) async {
-    SharedPreferences.setMockInitialValues({});
-
     await tester.pumpWidget(
       const MaterialApp(
         home: MoreScreen(),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(
       find.text('Legal'),
@@ -209,25 +191,62 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Legal'), findsWidgets);
-    expect(find.textContaining('Stockfish chess engine'), findsOneWidget);
-    expect(find.textContaining('GPLv3'), findsWidgets);
-    expect(
-      find.textContaining('GNU General Public License version 3'),
-      findsWidgets,
-    );
-    expect(find.textContaining('source code'), findsWidgets);
+
+    for (final required in <String>[
+      'Stockfish chess engine',
+      'GPLv3',
+      'Stockfish 18',
+      'official Stockfish project',
+      'Source code and licenses',
+      'Source code',
+      'https://github.com/ChessCrusherBot/turbo-chess',
+      'Chess pieces',
+      'Cburnett',
+      'Chess sounds',
+      'OpenGameArt',
+      'Font Awesome Free',
+      'Position/FEN files',
+      'Lichess',
+      'CC0',
+      'does not use Lichess broadcast games',
+      'Google Fonts',
+      'Privacy and offline behavior',
+      'offline Android app',
+      'does not include ads',
+      'does not request the INTERNET permission',
+      'Android build libraries',
+      'Turbo Chess branding assets',
+    ]) {
+      expect(find.textContaining(required), findsWidgets, reason: required);
+    }
+
+    for (final forbidden in <String>[
+      'assets/legal/',
+      'assets/sounds/',
+      'assets/positions/',
+      'THIRD_PARTY_NOTICES.md',
+      'STOCKFISH_SOURCE.txt',
+      'STOCKFISH_BUILDING.md',
+      'TURBO_CHESS_SOURCE.md',
+      '.md',
+      '.txt',
+      'Local files',
+      'Included in the app/source package:',
+      'Project generation notes',
+      'Current project notes',
+      'before Play Store upload',
+      'pre-upload',
+      'final review',
+      'human/legal review',
+      'TODO',
+    ]) {
+      expect(find.textContaining(forbidden), findsNothing, reason: forbidden);
+    }
+
     expect(find.textContaining('without warranty'), findsWidgets);
-    expect(find.textContaining('Cburnett SVG chess pieces'), findsOneWidget);
-    expect(
-        find.textContaining('License selected: BSD license'), findsOneWidget);
-    expect(
-      find.textContaining('does not imply endorsement'),
-      findsOneWidget,
-    );
-    expect(find.textContaining('Click sounds(6)'), findsOneWidget);
-    expect(find.textContaining('License selected: CC0'), findsOneWidget);
-    expect(find.textContaining('Font Awesome Free'), findsOneWidget);
     expect(find.textContaining('No Font Awesome Pro icons'), findsOneWidget);
+    expect(
+        find.textContaining('stored locally on this device'), findsOneWidget);
     expect(find.textContaining('Turbo Chess launcher icon'), findsOneWidget);
     expect(find.byType(SingleChildScrollView), findsOneWidget);
   });
@@ -245,7 +264,6 @@ void main() {
   testWidgets('Settings sheet keeps Close button above gesture area', (
     tester,
   ) async {
-    SharedPreferences.setMockInitialValues({});
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(393, 560);
     tester.view.viewPadding = const FakeViewPadding(bottom: 34);
@@ -293,8 +311,6 @@ void main() {
   });
 
   testWidgets('Settings Sound toggle persists off and on', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-
     await tester.pumpWidget(
       const MaterialApp(
         home: MoreScreen(),

@@ -9,15 +9,10 @@ enum TurboChessIconGlyph {
   bookmarks,
   chessBasicsMastery,
   roadToGm,
-  adFreeAccess,
-  subscribeAdFree,
-  premiumPass,
   settings,
   howToPlay,
   legal,
   about,
-  restorePremium,
-  restoreHelp,
 }
 
 class TurboChessIconSymbol extends StatelessWidget {
@@ -64,15 +59,10 @@ class TurboChessIconSymbol extends StatelessWidget {
         return FontAwesomeIcons.crown;
       case TurboChessIconGlyph.bookmarks:
       case TurboChessIconGlyph.chessBasicsMastery:
-      case TurboChessIconGlyph.adFreeAccess:
-      case TurboChessIconGlyph.subscribeAdFree:
-      case TurboChessIconGlyph.premiumPass:
       case TurboChessIconGlyph.settings:
       case TurboChessIconGlyph.howToPlay:
       case TurboChessIconGlyph.legal:
       case TurboChessIconGlyph.about:
-      case TurboChessIconGlyph.restorePremium:
-      case TurboChessIconGlyph.restoreHelp:
         return null;
     }
   }
@@ -83,12 +73,6 @@ class TurboChessIconSymbol extends StatelessWidget {
         return Icons.bookmark_rounded;
       case TurboChessIconGlyph.chessBasicsMastery:
         return Icons.menu_book_rounded;
-      case TurboChessIconGlyph.adFreeAccess:
-        return Icons.shield_outlined;
-      case TurboChessIconGlyph.subscribeAdFree:
-        return Icons.workspace_premium_rounded;
-      case TurboChessIconGlyph.premiumPass:
-        return Icons.confirmation_number_rounded;
       case TurboChessIconGlyph.settings:
         return Icons.settings_rounded;
       case TurboChessIconGlyph.howToPlay:
@@ -97,10 +81,6 @@ class TurboChessIconSymbol extends StatelessWidget {
         return Icons.gavel_rounded;
       case TurboChessIconGlyph.about:
         return Icons.info_outline_rounded;
-      case TurboChessIconGlyph.restorePremium:
-        return Icons.restore_rounded;
-      case TurboChessIconGlyph.restoreHelp:
-        return Icons.help_outline_rounded;
       case TurboChessIconGlyph.openingDrills:
       case TurboChessIconGlyph.middlegameDrills:
       case TurboChessIconGlyph.endgameDrills:

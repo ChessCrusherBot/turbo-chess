@@ -303,7 +303,7 @@ class AudioplayersTurboSoundBackend implements TurboSoundBackend {
         _globalAudioContextSetter =
             globalAudioContextSetter ?? AudioPlayer.global.setAudioContext;
 
-  static const int _playersPerEvent = 3;
+  static const int _playersPerEvent = 2;
   static final AudioContext soundEffectAudioContext = AudioContext(
     android: const AudioContextAndroid(
       contentType: AndroidContentType.sonification,
@@ -364,6 +364,7 @@ class AudioplayersTurboSoundBackend implements TurboSoundBackend {
     _nextPlayerIndex[event] = (index + 1) % players.length;
     await player.stop();
     await player.setVolume(asset.volume);
+    await player.setSource(AssetSource(asset.assetPath));
     await player.resume();
   }
 

@@ -32,8 +32,6 @@ if (releaseBuildRequested && !releaseSigningConfigured) {
     )
 }
 
-val testAdmobApplicationId = "ca-app-pub-3940256099942544~3347511713"
-val releaseAdmobApplicationId = "ca-app-pub-8049412043190582~9425755411"
 android {
     namespace = "com.turbochess.app"
     compileSdk = flutter.compileSdkVersion
@@ -73,23 +71,13 @@ android {
         multiDexEnabled = true
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["admobApplicationId"] = testAdmobApplicationId
-        manifestPlaceholders["mobileAdsInitProviderEnabled"] = false.toString()
     }
 
     buildTypes {
-        debug {
-            manifestPlaceholders["admobApplicationId"] = testAdmobApplicationId
-            manifestPlaceholders["mobileAdsInitProviderEnabled"] =
-                false.toString()
-        }
-
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
-            manifestPlaceholders["admobApplicationId"] = releaseAdmobApplicationId
-            manifestPlaceholders["mobileAdsInitProviderEnabled"] = true.toString()
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

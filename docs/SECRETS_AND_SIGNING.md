@@ -16,8 +16,7 @@ Never commit:
 - `client_secret*.json`
 - `.env` or `.env.*`
 - private API keys
-- AdMob account secrets
-- bank/payment details
+- developer payment/tax records
 - private Play Console credentials
 
 ## Android Signing
@@ -32,9 +31,11 @@ Turbo Chess currently reads release signing settings from `android/keystore.prop
 
 Keep upload keys and Play App Signing credentials private. If a key is ever published, treat it as compromised and rotate it through the appropriate Play Console process.
 
-## AdMob And Play Billing
+## Ads, Payments, And Play Billing
 
-AdMob app IDs, ad unit IDs, and Play Billing product IDs may appear in code when needed by the app, but do not publish account secrets, service account keys, private reports, payment information, or private API credentials.
+The current Turbo Chess Android release is intended to be free, ad-free, offline, and local-only. It does not include an ad SDK, in-app payments, or Google Play Billing.
+
+If ads or payments are added later, do not publish account secrets, service account keys, private reports, developer payment/tax records, or private API credentials.
 
 ## Firebase / google-services.json
 
@@ -48,4 +49,4 @@ Before creating a public GitHub repository:
 2. Run a secret scan.
 3. Check `git ls-files` for secret-looking names.
 4. Confirm `.gitignore` protects private files.
-5. Keep signing, billing, and AdMob credentials outside the public repo.
+5. Keep signing credentials, Play Console private files, and developer payment/tax records outside the public repo.

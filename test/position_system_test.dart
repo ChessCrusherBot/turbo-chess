@@ -85,7 +85,8 @@ void main() {
         throwsA(isA<RangeError>()));
   });
 
-  test('progress defaults to only position 1 unlocked', () async {
+  test('progress defaults keep legacy unlock value but all indexes are open',
+      () async {
     SharedPreferences.setMockInitialValues({});
     const store = PositionProgressStore();
     final progress = await store.snapshot(PositionCategory.opening);
@@ -106,11 +107,35 @@ void main() {
         highestUnlockedIndex: progress.highestUnlockedIndex,
         hasPremiumAccess: false,
       ),
+      isTrue,
+    );
+    expect(
+      PositionProgressStore.isUnlocked(
+        positionIndex: 10000,
+        highestUnlockedIndex: progress.highestUnlockedIndex,
+        hasPremiumAccess: false,
+      ),
+      isTrue,
+    );
+    expect(
+      PositionProgressStore.isUnlocked(
+        positionIndex: 0,
+        highestUnlockedIndex: progress.highestUnlockedIndex,
+        hasPremiumAccess: false,
+      ),
+      isFalse,
+    );
+    expect(
+      PositionProgressStore.isUnlocked(
+        positionIndex: 10001,
+        highestUnlockedIndex: progress.highestUnlockedIndex,
+        hasPremiumAccess: false,
+      ),
       isFalse,
     );
   });
 
-  test('user checkmate completion unlocks next position', () async {
+  test('user checkmate completion records completion progress', () async {
     SharedPreferences.setMockInitialValues({});
     const store = PositionProgressStore();
 
@@ -168,7 +193,7 @@ void main() {
     );
   });
 
-  test('premium unlocks all without changing progress path', () async {
+  test('all positions are accessible without changing progress path', () async {
     SharedPreferences.setMockInitialValues({});
     const store = PositionProgressStore();
     await store.markCompleted(PositionCategory.endgame, 1);
@@ -198,13 +223,13 @@ void main() {
         highestUnlockedIndex: progress.highestUnlockedIndex,
         hasPremiumAccess: false,
       ),
-      isFalse,
+      isTrue,
     );
 
-    final afterPremiumAccess = await store.snapshot(PositionCategory.endgame);
-    expect(afterPremiumAccess.completedCount, 1);
-    expect(afterPremiumAccess.highestUnlockedIndex, 2);
-    expect(afterPremiumAccess.highestCompletedIndex, 1);
+    final afterAccessCheck = await store.snapshot(PositionCategory.endgame);
+    expect(afterAccessCheck.completedCount, 1);
+    expect(afterAccessCheck.highestUnlockedIndex, 2);
+    expect(afterAccessCheck.highestCompletedIndex, 1);
   });
 }
 

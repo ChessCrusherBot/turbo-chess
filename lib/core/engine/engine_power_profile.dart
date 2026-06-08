@@ -145,7 +145,7 @@ enum EnginePowerProfile {
           limitStrength: false,
           ponder: false,
           threads: safeDevice.hasModernHeadroom ? 2 : 1,
-          hashMb: safeDevice.isLowRamDevice ? 48 : 64,
+          hashMb: safeDevice.isLowRamDevice ? 32 : 64,
           timeout: const Duration(seconds: 10),
         );
       case EnginePowerProfile.max:
@@ -157,7 +157,7 @@ enum EnginePowerProfile {
             limitStrength: false,
             ponder: false,
             threads: 1,
-            hashMb: 64,
+            hashMb: 48,
             timeout: const Duration(seconds: 8),
           );
         }

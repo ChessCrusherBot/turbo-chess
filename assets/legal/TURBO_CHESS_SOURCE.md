@@ -1,10 +1,10 @@
 # Turbo Chess Source Correspondence
 
-Turbo Chess is prepared for GPLv3/open-source release from an engineering perspective.
+This file describes source correspondence material for Turbo Chess. Turbo Chess includes Stockfish, which is licensed under the GNU General Public License version 3.
 
-The public source package should include all app source needed to build Turbo Chess, including Flutter/Dart source, Android project files, `pubspec.yaml`, `pubspec.lock`, tests, third-party notices, and Stockfish source/build metadata.
+The source package should include all app source needed to build Turbo Chess, including Flutter/Dart source, Android project files, `pubspec.yaml`, `pubspec.lock`, tests, third-party notices, and Stockfish source/build metadata.
 
-Private signing keys, keystore passwords, Play Console credentials, AdMob account secrets, service account JSON files, bank/payment details, and private API keys must not be included in the public source package.
+Private signing keys, keystore passwords, Play Console credentials, service account JSON files, developer payment/tax records, and private API keys must not be included in the public source package.
 
 See:
 

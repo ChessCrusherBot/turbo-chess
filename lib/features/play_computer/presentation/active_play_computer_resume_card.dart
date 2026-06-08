@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/design_system.dart';
+import '../../../core/ui/confirm_leave_dialog.dart';
 import '../data/play_computer_active_game_store.dart';
 
 class ActivePlayComputerResumeCard extends StatefulWidget {
@@ -43,6 +44,15 @@ class _ActivePlayComputerResumeCardState
   }
 
   Future<void> _discard() async {
+    final confirmed = await ConfirmLeaveDialog.show(
+      context,
+      title: 'Discard unfinished game?',
+      message: 'This will delete the saved game and its current moves.',
+      cancelLabel: 'Cancel',
+      confirmLabel: 'Discard',
+      icon: Icons.delete_outline_rounded,
+    );
+    if (!confirmed) return;
     await _store.clear();
     if (!mounted) return;
     setState(() {

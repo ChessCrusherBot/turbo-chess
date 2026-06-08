@@ -20,6 +20,7 @@ class PositionDrillScreen extends StatefulWidget {
   final AdFreeService? adFreeService;
   final EngineMoveProvider? engineMoveProvider;
   final ValueChanged<DrillDebugSnapshot>? debugOnStateChanged;
+  final bool resumeActiveOnOpen;
 
   const PositionDrillScreen({
     super.key,
@@ -30,6 +31,7 @@ class PositionDrillScreen extends StatefulWidget {
     this.adFreeService,
     this.engineMoveProvider,
     this.debugOnStateChanged,
+    this.resumeActiveOnOpen = false,
   });
 
   @override
@@ -46,7 +48,7 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
 
   bool get _hasActiveDrillSnapshot {
     final snapshot = _snapshot;
-    return snapshot != null && snapshot.unlocked && snapshot.fen != null;
+    return snapshot != null && snapshot.fen != null;
   }
 
   Color get _accentColor => switch (widget.category) {
@@ -61,14 +63,10 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
     _repository = widget.repository ?? PositionFenRepository();
     _adFreeService = widget.adFreeService ?? AdFreeService.instance;
     _startSnapshotLoad(reason: 'initial route load');
-    _adFreeService.addListener(_handlePremiumChanged);
   }
 
   @override
-  void dispose() {
-    _adFreeService.removeListener(_handlePremiumChanged);
-    super.dispose();
-  }
+  void dispose() => super.dispose();
 
   @override
   void didUpdateWidget(covariant PositionDrillScreen oldWidget) {
@@ -80,10 +78,8 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
         oldWidget.progressStore != widget.progressStore;
 
     if (routeIdentityChanged) {
-      _adFreeService.removeListener(_handlePremiumChanged);
       _repository = widget.repository ?? PositionFenRepository();
       _adFreeService = widget.adFreeService ?? AdFreeService.instance;
-      _adFreeService.addListener(_handlePremiumChanged);
       _snapshot = null;
       _snapshotError = null;
       _loadingSnapshot = true;
@@ -93,9 +89,7 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
 
     if (dependenciesChanged) {
       if (oldWidget.adFreeService != widget.adFreeService) {
-        _adFreeService.removeListener(_handlePremiumChanged);
         _adFreeService = widget.adFreeService ?? AdFreeService.instance;
-        _adFreeService.addListener(_handlePremiumChanged);
       }
       _repository = widget.repository ?? PositionFenRepository();
       if (_hasActiveDrillSnapshot) {
@@ -108,22 +102,12 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
     }
   }
 
-  void _handlePremiumChanged() {
-    if (!mounted) return;
-    if (_hasActiveDrillSnapshot) {
-      _debugLog('blocked premium refresh while drill is active');
-      return;
-    }
-    _startSnapshotLoad(reason: 'premium refresh without active drill');
-  }
-
   void _startSnapshotLoad({required String reason}) {
     final token = ++_snapshotLoadToken;
     final category = widget.category;
     final positionIndex = widget.positionIndex;
     final repository = _repository;
     final progressStore = widget.progressStore;
-    final adFreeService = _adFreeService;
 
     setState(() {
       _loadingSnapshot = true;
@@ -136,7 +120,6 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
         positionIndex: positionIndex,
         repository: repository,
         progressStore: progressStore,
-        adFreeService: adFreeService,
       ).then((snapshot) {
         if (!mounted ||
             token != _snapshotLoadToken ||
@@ -185,31 +168,22 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
     required int positionIndex,
     required PositionFenRepository repository,
     required PositionProgressStore progressStore,
-    required AdFreeService adFreeService,
   }) async {
     final availableCount = await repository.availableCount(category);
     final progress = await progressStore.snapshot(category);
-    final hasPremiumAccess = adFreeService.status.isAdFree;
     final inRange = positionIndex >= 1 && positionIndex <= availableCount;
-    final unlocked = inRange &&
-        PositionProgressStore.isUnlocked(
-          positionIndex: positionIndex,
-          highestUnlockedIndex: progress.highestUnlockedIndex,
-          hasPremiumAccess: hasPremiumAccess,
-        );
     final fen =
-        unlocked ? await repository.loadFen(category, positionIndex) : null;
+        inRange ? await repository.loadFen(category, positionIndex) : null;
     if (fen != null) {
       ChessBoard.fromFen(fen);
     }
-    if (unlocked) {
+    if (fen != null) {
       await progressStore.setLastPlayed(category, positionIndex);
     }
 
     return _PositionDrillSnapshot(
       availableCount: availableCount,
       inRange: inRange,
-      unlocked: unlocked,
       fen: fen,
       completed: progress.isCompleted(positionIndex),
     );
@@ -228,7 +202,7 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
   @override
   Widget build(BuildContext context) {
     final data = _snapshot;
-    if (data != null && data.inRange && data.unlocked && data.fen != null) {
+    if (data != null && data.inRange && data.fen != null) {
       return DrillDetailBaseScreen.position(
         key: ValueKey(
           'position_drill_${widget.category.id}_${widget.positionIndex}',
@@ -244,6 +218,7 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
         adFreeService: _adFreeService,
         engineMoveProvider: widget.engineMoveProvider,
         debugOnStateChanged: widget.debugOnStateChanged,
+        resumeActiveOnOpen: widget.resumeActiveOnOpen,
       );
     }
 
@@ -273,15 +248,7 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
     if (data == null || !data.inRange) {
       return _PositionDrillMessage(
         title: 'Position not found',
-        message: 'This position index is not in the pilot file.',
-        color: _accentColor,
-      );
-    }
-
-    if (!data.unlocked || data.fen == null) {
-      return _PositionDrillMessage(
-        title: 'Position locked',
-        message: 'Complete the previous position to unlock this one.',
+        message: 'Position not found.',
         color: _accentColor,
       );
     }
@@ -297,14 +264,12 @@ class _PositionDrillScreenState extends State<PositionDrillScreen> {
 class _PositionDrillSnapshot {
   final int availableCount;
   final bool inRange;
-  final bool unlocked;
   final String? fen;
   final bool completed;
 
   const _PositionDrillSnapshot({
     required this.availableCount,
     required this.inRange,
-    required this.unlocked,
     required this.fen,
     required this.completed,
   });
@@ -333,7 +298,7 @@ class _PositionDrillMessage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.lock_rounded, color: color, size: 36),
+                Icon(Icons.error_outline_rounded, color: color, size: 36),
                 const SizedBox(height: 12),
                 Text(
                   title,

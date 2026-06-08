@@ -30,7 +30,7 @@ void main() {
     expect(find.textContaining('Coins'), findsNothing);
   });
 
-  testWidgets('Position grid shows current and locked free states', (
+  testWidgets('Position grid shows open and completed free states', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
@@ -56,8 +56,16 @@ void main() {
 
     expect(find.text('Opening Drills'), findsWidgets);
     expect(find.text('Position'), findsNWidgets(3));
-    expect(find.text('Current'), findsWidgets);
-    expect(find.text('Locked'), findsNWidgets(2));
+    expect(find.text('Last played'), findsWidgets);
+    expect(find.text('Open'), findsNWidgets(2));
+    expect(find.text('Locked'), findsNothing);
+    expect(find.text('All positions unlocked for version 1.'), findsNothing);
+    expect(find.text('Jump to Position'), findsOneWidget);
+    expect(find.byKey(const ValueKey('jump_position_input')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('open_jump_position_dialog')),
+      findsNothing,
+    );
     expect(find.text('Fast navigation'), findsOneWidget);
     expect(find.textContaining('Beginner to Master'), findsNothing);
   });

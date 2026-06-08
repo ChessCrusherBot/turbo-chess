@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/ads/ad_free_status_widgets.dart';
 import '../../../core/ads/ad_shell.dart';
 import '../../../core/design/turbo_icons.dart';
 import '../../../core/design_system.dart';
@@ -67,9 +66,6 @@ class SubtopicsListBaseScreen extends StatelessWidget {
                         Text(
                           '${topic.subtopics.length} subtopics',
                           style: const TextStyle(color: DesignSystem.textMuted),
-                        ),
-                        const AdFreeCompactStatusLine(
-                          padding: EdgeInsets.only(top: 14),
                         ),
                       ],
                     ),

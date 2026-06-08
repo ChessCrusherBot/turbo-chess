@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/ads/ad_free_status_widgets.dart';
 import '../../../core/ads/ad_shell.dart';
 import '../../../core/design_system.dart';
 import '../../../core/ui_components.dart';
@@ -72,9 +71,6 @@ class SessionSummaryScreen extends StatelessWidget {
                           color: DesignSystem.textMuted,
                           height: 1.4,
                         ),
-                      ),
-                      const AdFreeCompactStatusLine(
-                        padding: EdgeInsets.only(top: 16),
                       ),
                     ],
                   ),

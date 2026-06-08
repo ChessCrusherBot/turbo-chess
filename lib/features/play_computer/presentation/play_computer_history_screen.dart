@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,6 +8,7 @@ import '../../../core/chess/chess_board.dart';
 import '../../../core/design/turbo_icons.dart';
 import '../../../core/design_system.dart';
 import '../../../core/engine/chess_rules.dart';
+import '../../../core/engine/san_converter.dart';
 import '../data/play_computer_history_store.dart';
 import '../domain/play_computer_game_record.dart';
 
@@ -88,8 +91,12 @@ class PlayComputerHistoryDetailScreen extends StatefulWidget {
 class _PlayComputerHistoryDetailScreenState
     extends State<PlayComputerHistoryDetailScreen> {
   late final _ReplayBuildResult _replay;
+  late final ScrollController _moveStripController;
+  late final Map<int, GlobalKey> _movePillKeys;
+  final GlobalKey _moveStripViewportKey = GlobalKey();
   int _plyIndex = 0;
   bool _flipped = false;
+  bool _detailsExpanded = false;
 
   PlayComputerGameRecord get record => widget.record;
 
@@ -97,8 +104,19 @@ class _PlayComputerHistoryDetailScreenState
   void initState() {
     super.initState();
     _replay = _ReplayBuildResult.fromRecord(record);
+    _moveStripController = ScrollController();
+    _movePillKeys = {
+      for (final move in _replay.moves)
+        move.ply: GlobalKey(debugLabel: 'replay_move_pill_${move.ply}'),
+    };
     _plyIndex = 0;
     _flipped = record.userColor == PieceColor.black;
+  }
+
+  @override
+  void dispose() {
+    _moveStripController.dispose();
+    super.dispose();
   }
 
   @override
@@ -124,9 +142,15 @@ class _PlayComputerHistoryDetailScreenState
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
               sliver: SliverToBoxAdapter(
-                child: _HistoryDetailHeader(record: record),
+                child: _HistoryDetailHeader(
+                  record: record,
+                  expanded: _detailsExpanded,
+                  onToggle: () => setState(
+                    () => _detailsExpanded = !_detailsExpanded,
+                  ),
+                ),
               ),
             ),
             if (_replay.warning != null)
@@ -169,19 +193,7 @@ class _PlayComputerHistoryDetailScreenState
                 ),
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-              sliver: SliverToBoxAdapter(
-                child: Text(
-                  'Moves',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: DesignSystem.textPrimary,
-                        fontWeight: FontWeight.w900,
-                      ),
-                ),
-              ),
-            ),
-            if (record.moves.isEmpty)
+            if (_replay.moves.isEmpty)
               const SliverPadding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 24),
                 sliver: SliverToBoxAdapter(
@@ -191,29 +203,14 @@ class _PlayComputerHistoryDetailScreenState
             else
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      if (index.isOdd) return const SizedBox(height: 8);
-                      final moveIndex = index ~/ 2;
-                      final move = record.moves[moveIndex];
-                      return _MoveTile(
-                        number: moveIndex + 1,
-                        prefix:
-                            _movePrefix(move.moveNumber, move.sideToMoveBefore),
-                        san: move.moveSan.isEmpty ? move.move : move.moveSan,
-                        uci: move.move,
-                        by: move.isUser ? 'You' : 'Engine',
-                        selected: _plyIndex == moveIndex + 1,
-                        onTap: () => _jumpTo(
-                          (moveIndex + 1).clamp(
-                            0,
-                            _replay.positions.length - 1,
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: record.moves.length * 2 - 1,
+                sliver: SliverToBoxAdapter(
+                  child: _ReplayMoveStrip(
+                    controller: _moveStripController,
+                    viewportKey: _moveStripViewportKey,
+                    moveKeys: _movePillKeys,
+                    moves: _replay.moves,
+                    selectedPly: _plyIndex,
+                    onSelectPly: _jumpTo,
                   ),
                 ),
               ),
@@ -224,16 +221,74 @@ class _PlayComputerHistoryDetailScreenState
   }
 
   void _jumpTo(int index) {
+    final nextIndex = index.clamp(0, _replay.positions.length - 1).toInt();
+    if (_plyIndex == nextIndex) {
+      _scheduleSelectedMoveScroll();
+      return;
+    }
     setState(() {
-      _plyIndex = index.clamp(0, _replay.positions.length - 1);
+      _plyIndex = nextIndex;
+    });
+    _scheduleSelectedMoveScroll();
+  }
+
+  void _scheduleSelectedMoveScroll() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _scrollSelectedMoveIntoView();
     });
   }
 
-  static String _movePrefix(int moveNumber, PieceColor color) {
-    final safeMoveNumber = moveNumber <= 0 ? 1 : moveNumber;
-    return color == PieceColor.white
-        ? '$safeMoveNumber.'
-        : '$safeMoveNumber...';
+  void _scrollSelectedMoveIntoView() {
+    if (!_moveStripController.hasClients ||
+        !_moveStripController.position.hasContentDimensions) {
+      return;
+    }
+
+    if (_plyIndex <= 0) {
+      if (_moveStripController.offset <= 0) return;
+      unawaited(
+        _moveStripController.animateTo(
+          0,
+          duration: DesignSystem.durationFast,
+          curve: Curves.easeOutCubic,
+        ),
+      );
+      return;
+    }
+
+    final itemContext = _movePillKeys[_plyIndex]?.currentContext;
+    final viewportContext = _moveStripViewportKey.currentContext;
+    if (itemContext == null || viewportContext == null) return;
+
+    final itemBox = itemContext.findRenderObject();
+    final viewportBox = viewportContext.findRenderObject();
+    if (itemBox is! RenderBox ||
+        viewportBox is! RenderBox ||
+        !itemBox.hasSize ||
+        !viewportBox.hasSize) {
+      return;
+    }
+
+    final itemLeft = itemBox.localToGlobal(Offset.zero).dx -
+        viewportBox
+            .localToGlobal(
+              Offset.zero,
+            )
+            .dx;
+    final targetOffset = (_moveStripController.offset +
+            itemLeft -
+            ((viewportBox.size.width - itemBox.size.width) / 2))
+        .clamp(0.0, _moveStripController.position.maxScrollExtent)
+        .toDouble();
+
+    unawaited(
+      _moveStripController.animateTo(
+        targetOffset,
+        duration: DesignSystem.durationNormal,
+        curve: Curves.easeOutCubic,
+      ),
+    );
   }
 }
 
@@ -310,10 +365,12 @@ class _ReplayControls extends StatelessWidget {
 
 class _ReplayBuildResult {
   final List<_ReplayPosition> positions;
+  final List<_ReplayDisplayMove> moves;
   final String? warning;
 
   const _ReplayBuildResult({
     required this.positions,
+    required this.moves,
     this.warning,
   });
 
@@ -324,10 +381,12 @@ class _ReplayBuildResult {
     final positions = <_ReplayPosition>[
       _ReplayPosition(board: startingBoard),
     ];
+    final displayMoves = <_ReplayDisplayMove>[];
     var current = startingBoard;
     String? warning;
 
-    for (final move in record.moves) {
+    for (var index = 0; index < record.moves.length; index += 1) {
+      final move = record.moves[index];
       if (move.move.length < 4) {
         warning = 'This saved game cannot be fully replayed.';
         break;
@@ -338,6 +397,19 @@ class _ReplayBuildResult {
         warning = 'This saved game cannot be fully replayed.';
         break;
       }
+      final san = _sanForReplayMove(
+        uci: move.move,
+        savedSan: move.moveSan,
+        before: current,
+      );
+      displayMoves.add(
+        _ReplayDisplayMove(
+          ply: index + 1,
+          moveNumber: move.moveNumber > 0 ? move.moveNumber : (index ~/ 2) + 1,
+          sideToMove: move.sideToMoveBefore,
+          san: san,
+        ),
+      );
       positions.add(
         _ReplayPosition(
           board: next,
@@ -362,8 +434,19 @@ class _ReplayBuildResult {
 
     return _ReplayBuildResult(
       positions: positions,
+      moves: displayMoves,
       warning: warning,
     );
+  }
+
+  static String _sanForReplayMove({
+    required String uci,
+    required String savedSan,
+    required ChessBoard before,
+  }) {
+    final generatedSan = SanConverter.uciToSan(uci, before);
+    if (generatedSan != uci.substring(2, 4)) return generatedSan;
+    return savedSan.isNotEmpty ? savedSan : generatedSan;
   }
 }
 
@@ -385,6 +468,25 @@ class _ReplayMove {
     required this.from,
     required this.to,
   });
+}
+
+class _ReplayDisplayMove {
+  final int ply;
+  final int moveNumber;
+  final PieceColor sideToMove;
+  final String san;
+
+  const _ReplayDisplayMove({
+    required this.ply,
+    required this.moveNumber,
+    required this.sideToMove,
+    required this.san,
+  });
+
+  String get label {
+    final prefix = sideToMove == PieceColor.white ? '$moveNumber. ' : '';
+    return '$prefix$san';
+  }
 }
 
 class _EmptyHistoryState extends StatelessWidget {
@@ -531,8 +633,14 @@ class _HistoryDetailHeader extends StatelessWidget {
   static final DateFormat _dateFormat = DateFormat('MMM d, yyyy h:mm a');
 
   final PlayComputerGameRecord record;
+  final bool expanded;
+  final VoidCallback onToggle;
 
-  const _HistoryDetailHeader({required this.record});
+  const _HistoryDetailHeader({
+    required this.record,
+    required this.expanded,
+    required this.onToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -545,87 +653,197 @@ class _HistoryDetailHeader extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: DesignSystem.backgroundRaised,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: resultColor.withAlpha(80)),
         boxShadow: [
           BoxShadow(
             color: resultColor.withAlpha(18),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          key: const ValueKey('play_history_detail_card'),
+          onTap: onToggle,
+          borderRadius: BorderRadius.circular(18),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(12, 11, 10, 11),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.history_rounded, color: resultColor, size: 28),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    record.resultText,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: DesignSystem.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
+                Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: resultColor.withAlpha(22),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: resultColor.withAlpha(66)),
+                      ),
+                      child: Icon(
+                        Icons.history_rounded,
+                        color: resultColor,
+                        size: 20,
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            record.resultText,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: DesignSystem.textPrimary,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            _dateFormat.format(record.endedAt.toLocal()),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: DesignSystem.textMuted,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      key: const ValueKey('play_history_details_toggle'),
+                      tooltip: expanded ? 'Hide details' : 'Show details',
+                      onPressed: onToggle,
+                      icon: AnimatedRotation(
+                        turns: expanded ? 0.5 : 0,
+                        duration: DesignSystem.durationFast,
+                        child: const Icon(Icons.expand_more_rounded),
+                      ),
+                    ),
+                  ],
+                ),
+                AnimatedSize(
+                  duration: DesignSystem.durationNormal,
+                  curve: Curves.easeOutCubic,
+                  child: expanded
+                      ? Padding(
+                          key: const ValueKey('play_history_details_expanded'),
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Divider(
+                                height: 1,
+                                color: DesignSystem.border,
+                              ),
+                              const SizedBox(height: 6),
+                              _MetaLine(
+                                label: 'You played',
+                                value: record.userColorLabel,
+                              ),
+                              _MetaLine(
+                                label: 'Time control',
+                                value: record.timeControlLabel,
+                              ),
+                              _MetaLine(
+                                label: 'Engine',
+                                value:
+                                    '${record.engineProfileName}, depth ${record.engineDepth}, skill ${record.engineSkill}, ${record.engineMoveTimeMs}ms',
+                              ),
+                              _MetaLine(
+                                label: 'Starting FEN',
+                                value: record.startingFen,
+                              ),
+                              _MetaLine(
+                                label: 'Final FEN',
+                                value: record.finalFen,
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            _MetaLine(
-                label: 'Ended', value: _dateFormat.format(record.endedAt)),
-            _MetaLine(label: 'You played', value: record.userColorLabel),
-            _MetaLine(label: 'Time control', value: record.timeControlLabel),
-            _MetaLine(
-              label: 'Engine',
-              value:
-                  '${record.engineProfileName}, depth ${record.engineDepth}, skill ${record.engineSkill}, ${record.engineMoveTimeMs}ms',
-            ),
-            const SizedBox(height: 8),
-            ExpansionTile(
-              tilePadding: EdgeInsets.zero,
-              childrenPadding: EdgeInsets.zero,
-              title: const Text(
-                'FEN details',
-                style: TextStyle(
-                  color: DesignSystem.textSecondary,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              children: [
-                _MetaLine(label: 'Starting FEN', value: record.startingFen),
-                _MetaLine(label: 'Final FEN', value: record.finalFen),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _MoveTile extends StatelessWidget {
-  final int number;
-  final String prefix;
-  final String san;
-  final String uci;
-  final String by;
+class _ReplayMoveStrip extends StatelessWidget {
+  final ScrollController controller;
+  final GlobalKey viewportKey;
+  final Map<int, GlobalKey> moveKeys;
+  final List<_ReplayDisplayMove> moves;
+  final int selectedPly;
+  final ValueChanged<int> onSelectPly;
+
+  const _ReplayMoveStrip({
+    required this.controller,
+    required this.viewportKey,
+    required this.moveKeys,
+    required this.moves,
+    required this.selectedPly,
+    required this.onSelectPly,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      key: const ValueKey('play_history_horizontal_move_strip'),
+      decoration: BoxDecoration(
+        color: DesignSystem.backgroundRaised,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: DesignSystem.border),
+      ),
+      child: SizedBox(
+        key: viewportKey,
+        height: 52,
+        child: SingleChildScrollView(
+          key: const ValueKey('play_history_move_strip_scroll'),
+          controller: controller,
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          child: Row(
+            children: [
+              for (var index = 0; index < moves.length; index += 1) ...[
+                if (index > 0) const SizedBox(width: 8),
+                KeyedSubtree(
+                  key: moveKeys[moves[index].ply],
+                  child: _MovePill(
+                    move: moves[index],
+                    selected: selectedPly == moves[index].ply,
+                    onTap: () => onSelectPly(moves[index].ply),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MovePill extends StatelessWidget {
+  final _ReplayDisplayMove move;
   final bool selected;
   final VoidCallback onTap;
 
-  const _MoveTile({
-    required this.number,
-    required this.prefix,
-    required this.san,
-    required this.uci,
-    required this.by,
+  const _MovePill({
+    required this.move,
     required this.selected,
     required this.onTap,
   });
@@ -635,64 +853,34 @@ class _MoveTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        key: ValueKey('play_history_move_$number'),
+        key: ValueKey('play_history_move_pill_${move.ply}'),
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: DecoratedBox(
+        borderRadius: BorderRadius.circular(12),
+        child: AnimatedContainer(
+          duration: DesignSystem.durationFast,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected
-                ? DesignSystem.primary.withAlpha(24)
-                : DesignSystem.backgroundRaised,
-            borderRadius: BorderRadius.circular(14),
+                ? DesignSystem.primary.withAlpha(45)
+                : DesignSystem.backgroundElevated,
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: selected ? DesignSystem.primary : DesignSystem.border,
+              color: selected
+                  ? DesignSystem.primaryLight
+                  : DesignSystem.border.withAlpha(150),
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 44,
-                  child: Text(
-                    prefix,
-                    style: const TextStyle(
-                      color: DesignSystem.textMuted,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    san,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: DesignSystem.textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  by,
-                  style: const TextStyle(
-                    color: DesignSystem.secondaryLight,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  uci,
-                  style: const TextStyle(
-                    color: DesignSystem.textMuted,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
+          child: Text(
+            move.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: selected
+                  ? DesignSystem.primaryOnContainer
+                  : DesignSystem.textSecondary,
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
             ),
           ),
         ),

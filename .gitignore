@@ -82,12 +82,15 @@ android/.gradle/
 android/build/
 android/app/build/
 /release_package/
+/release_outputs/
 
 # Android local/signing
 local.properties
 android/local.properties
 android/key.properties
 android/keystore.properties
+/key.properties
+/keystore.properties
 *.jks
 *.keystore
 *.p12

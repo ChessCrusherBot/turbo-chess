@@ -14,21 +14,37 @@ class SanConverter {
       final fromFile = from.codeUnitAt(0) - 'a'.codeUnitAt(0);
       final toFile = to.codeUnitAt(0) - 'a'.codeUnitAt(0);
       if ((toFile - fromFile).abs() == 2) {
-        return toFile > fromFile ? 'O-O' : 'O-O-O';
+        return _withCheckSuffix(
+            toFile > fromFile ? 'O-O' : 'O-O-O', board, uci);
       }
     }
 
     if (piece.type == PieceType.pawn) {
       final isCapture = from[0] != to[0];
       final base = isCapture ? '${from[0]}x$to' : to;
-      if (prom != null) return '$base=${prom.toUpperCase()}';
-      return base;
+      if (prom != null) {
+        return _withCheckSuffix('$base=${prom.toUpperCase()}', board, uci);
+      }
+      return _withCheckSuffix(base, board, uci);
     }
 
     final pieceChar = _pieceChar(piece.type);
     final isCapture = board.pieces.containsKey(to);
     final disambig = _getDisambig(board, from, to, piece);
-    return '$pieceChar$disambig${isCapture ? 'x' : ''}$to';
+    return _withCheckSuffix(
+      '$pieceChar$disambig${isCapture ? 'x' : ''}$to',
+      board,
+      uci,
+    );
+  }
+
+  static String _withCheckSuffix(String san, ChessBoard board, String uci) {
+    final after = ChessRules.applyUciMove(board, uci);
+    if (after == null) return san;
+    final checkedColor = after.turn;
+    if (ChessRules.isCheckmate(after, checkedColor)) return '$san#';
+    if (ChessRules.isKingInCheck(after, checkedColor)) return '$san+';
+    return san;
   }
 
   static String _getDisambig(

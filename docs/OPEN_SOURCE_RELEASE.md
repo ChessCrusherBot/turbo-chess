@@ -30,9 +30,8 @@ Do not publish:
 - Play Console service account JSON files
 - `google-services.json` until it has been reviewed carefully
 - `.env` files
-- AdMob account secrets
 - Play Console private credentials
-- bank/payment information
+- developer payment/tax records
 - private API keys
 
 ## How To Publish Later
@@ -67,9 +66,11 @@ No Stockfish source modifications are included in this repository. The project m
 
 ## Play Store Note
 
-The Play Store app can still use ads, subscriptions, and Play Billing while the source code is public. Public source release does not mean private signing credentials are public.
+The current Turbo Chess Android release is intended to be free, ad-free, offline, and local-only. It does not include an ad SDK, account/login system, analytics, cloud sync, in-app payments, or Google Play Billing.
 
-Users can inspect and modify GPL source, so monetization logic is visible. Do not publish signing keys, AdMob account secrets, Play Console credentials, service account JSON files, or bank/payment details.
+Public source release does not mean private signing credentials are public. Do not publish signing keys, Play Console credentials, service account JSON files, developer payment/tax records, or private API keys.
+
+If ads, payments, subscriptions, analytics, login, or cloud sync are ever added later, update the source release notes, app legal/privacy text, Android permissions, dependency notices, and Play Console Data Safety answers before release.
 
 ## Pre-Release Checklist
 

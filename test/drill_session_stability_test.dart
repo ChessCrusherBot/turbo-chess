@@ -4,10 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turbo_chess/core/ads/ad_free_service.dart';
-import 'package:turbo_chess/core/ads/entitlement_clock.dart';
 import 'package:turbo_chess/core/audio/turbo_sound_service.dart';
 import 'package:turbo_chess/core/chess/chess_board.dart';
 import 'package:turbo_chess/core/engine/chess_rules.dart';
@@ -27,7 +25,7 @@ void main() {
   });
 
   testWidgets(
-      'active drill does not reload after first move and premium refresh',
+      'active drill does not reload after first move and access refresh',
       (tester) async {
     final engineReply = Completer<String?>();
     final snapshots = <DrillDebugSnapshot>[];
@@ -50,9 +48,7 @@ void main() {
     expect(_boardFen(tester), isNot(initialFen));
     expect(snapshots.last.moveCount, 1);
 
-    await adFreeService.grantRewardedAdFreePass(
-      lastPassSource: 'drill_stability_test',
-    );
+    await adFreeService.refreshAdFreeStatus();
     await tester.pump();
 
     expect(find.byType(ChessBoardWidget), findsOneWidget);
@@ -260,11 +256,11 @@ void main() {
     await tester.pump();
   });
 
-  testWidgets('Go to Next Position still loads next position intentionally',
+  testWidgets(
+      'completion dialog Next Position loads next position intentionally',
       (tester) async {
-    final repo = _repoFor(PositionCategory.endgame, [_fen1, _fen2]);
+    final repo = _repoFor(PositionCategory.endgame, [_mateInOneFen, _fen2]);
     const progressStore = PositionProgressStore();
-    await progressStore.markCompleted(PositionCategory.endgame, 1);
 
     await tester.pumpWidget(
       MaterialApp(
@@ -294,9 +290,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(_boardFen(tester), _fen1);
+    expect(_boardFen(tester), _mateInOneFen);
+    expect(find.text('Next'), findsNothing);
 
-    await tester.tap(find.text('Next'));
+    await _tapBoardSquare(tester, 'g6');
+    await _tapBoardSquare(tester, 'g7');
+    await tester.pumpAndSettle();
+
+    expect(find.text('Position completed'), findsOneWidget);
+    expect(find.text('Next Position'), findsOneWidget);
+
+    await tester.tap(find.text('Next Position'));
     await tester.pumpAndSettle();
 
     expect(find.text('Endgame Position 2'), findsOneWidget);
@@ -341,6 +345,7 @@ void main() {
 
 const _fen1 = '8/8/8/4k3/8/4K3/4P3/8 w - - 0 1';
 const _fen2 = '8/8/8/3k4/8/3K4/3P4/8 w - - 0 1';
+const _mateInOneFen = '7k/8/5KQ1/8/8/8/8/8 w - - 0 1';
 
 Future<String?> _firstLegalEngineMove(String fen, _, __) async {
   return _firstLegalMoveFromFen(fen);
@@ -446,10 +451,7 @@ PositionFenRepository _repoFor(
 }
 
 AdFreeService _testAdFreeService() {
-  return AdFreeService.forTesting(
-    clock: const _FakeEntitlementClock(),
-    billingClient: _FakeBillingClient(),
-  );
+  return AdFreeService.forTesting();
 }
 
 class _ProgressStoreWithPendingSecondSnapshot extends PositionProgressStore {
@@ -479,51 +481,6 @@ class _ProgressStoreWithPendingSecondSnapshot extends PositionProgressStore {
     PositionCategory category,
     int positionIndex,
   ) async {}
-}
-
-class _FakeEntitlementClock implements EntitlementClock {
-  const _FakeEntitlementClock();
-
-  @override
-  Future<EntitlementTimeSnapshot> snapshot() async {
-    return EntitlementTimeSnapshot(
-      deviceUtc: DateTime.utc(2026, 1, 1, 12),
-      elapsedRealtimeMillis: 1000,
-    );
-  }
-}
-
-class _FakeBillingClient implements AdFreeBillingClient {
-  @override
-  Stream<List<PurchaseDetails>> get purchaseStream => const Stream.empty();
-
-  @override
-  Future<bool> isAvailable() async => false;
-
-  @override
-  Future<ProductDetailsResponse> queryProductDetails(
-    Set<String> identifiers,
-  ) async {
-    return ProductDetailsResponse(
-      productDetails: const <ProductDetails>[],
-      notFoundIDs: identifiers.toList(growable: false),
-    );
-  }
-
-  @override
-  Future<bool> buyNonConsumable({
-    required PurchaseParam purchaseParam,
-  }) async {
-    return false;
-  }
-
-  @override
-  Future<List<PurchaseDetails>> restorePurchases() async {
-    return const <PurchaseDetails>[];
-  }
-
-  @override
-  Future<void> completePurchase(PurchaseDetails purchase) async {}
 }
 
 class _FakePositionAssetBundle extends CachingAssetBundle {

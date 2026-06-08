@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/ads/ad_free_service.dart';
-import '../../../core/ads/ad_free_status_widgets.dart';
 import '../../../core/ads/ad_shell.dart';
 import '../../../core/audio/chess_sound_events.dart';
 import '../../../core/audio/turbo_sound_service.dart';
@@ -27,6 +26,7 @@ import '../../../core/ui/confirm_leave_dialog.dart';
 import '../../../core/ui/confirm_resign_dialog.dart';
 import '../../../core/ui/promotion_dialog.dart';
 import '../../../core/ui_components.dart';
+import '../data/active_drill_store.dart';
 
 class DrillDetailBaseScreen extends StatefulWidget {
   final String screenTitle;
@@ -43,6 +43,7 @@ class DrillDetailBaseScreen extends StatefulWidget {
   final AdFreeService? adFreeService;
   final EngineMoveProvider? engineMoveProvider;
   final ValueChanged<DrillDebugSnapshot>? debugOnStateChanged;
+  final bool resumeActiveOnOpen;
 
   const DrillDetailBaseScreen({
     super.key,
@@ -60,6 +61,7 @@ class DrillDetailBaseScreen extends StatefulWidget {
     this.adFreeService,
     this.engineMoveProvider,
     this.debugOnStateChanged,
+    this.resumeActiveOnOpen = false,
   });
 
   DrillDetailBaseScreen.position({
@@ -75,6 +77,7 @@ class DrillDetailBaseScreen extends StatefulWidget {
     AdFreeService? adFreeService,
     EngineMoveProvider? engineMoveProvider,
     ValueChanged<DrillDebugSnapshot>? debugOnStateChanged,
+    bool resumeActiveOnOpen = false,
   })  : screenTitle = category.title,
         topic = OpeningTopic(
           id: category.id,
@@ -102,7 +105,8 @@ class DrillDetailBaseScreen extends StatefulWidget {
         initialPositionCompleted = initialPositionCompleted,
         adFreeService = adFreeService,
         engineMoveProvider = engineMoveProvider,
-        debugOnStateChanged = debugOnStateChanged;
+        debugOnStateChanged = debugOnStateChanged,
+        resumeActiveOnOpen = resumeActiveOnOpen;
 
   @override
   State<DrillDetailBaseScreen> createState() => _DrillDetailBaseScreenState();
@@ -153,15 +157,16 @@ class DrillDebugSnapshot {
   });
 }
 
-class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
+class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen>
+    with WidgetsBindingObserver {
   static const Color _boardLight = Color(0xFFE6D8BD);
   static const Color _boardDark = Color(0xFF5E7C66);
+  static const ActiveDrillStore _activeDrillStore = ActiveDrillStore();
   static int _nextSessionId = 0;
 
   final TurboSoundService _soundService = TurboSoundService.instance;
   final BookmarkStore _bookmarkStore = const BookmarkStore();
   late final int _drillSessionId;
-  late AdFreeService _adFreeService;
   int _gameToken = 0;
 
   late List<ChessDrill> _drills;
@@ -169,10 +174,11 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
   int _currentDrillIndex = 0;
   int _currentPositionIndex = 1;
   int _totalPositions = 1;
-  int _highestUnlockedIndex = 1;
   EnginePowerProfile _engineProfile = EnginePowerProfile.strong;
   PositionFenRepository? _positionRepository;
   PositionProgressStore? _positionProgressStore;
+  DateTime? _activeDrillStartedAt;
+  DateTime? _lastActiveDrillSnapshotWriteAt;
 
   ChessBoard _playBoard = ChessBoard.starting();
   String _initialFen = ChessBoard.standardStartingFen;
@@ -198,9 +204,10 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
   bool _leaveDialogVisible = false;
   bool _leavingDrill = false;
   bool _engineErrorVisible = false;
-  bool _hasPremiumAccess = false;
   bool _loadingNextPosition = false;
   bool _currentPositionCompleted = false;
+  bool _activeDrillSnapshotPaused = false;
+  bool _activeDrillWasRestored = false;
 
   bool get _isPositionMode => widget.positionCategory != null;
   bool get _hasActiveAttempt {
@@ -214,8 +221,9 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _activeDrillSnapshotPaused = widget.resumeActiveOnOpen;
     _drillSessionId = ++_nextSessionId;
-    _adFreeService = widget.adFreeService ?? AdFreeService.instance;
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _currentPositionIndex = _resolvedPositionIndex;
     _totalPositions = widget.totalPositions ?? 1;
@@ -225,8 +233,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
           widget.positionRepository ?? PositionFenRepository();
       _positionProgressStore =
           widget.positionProgressStore ?? const PositionProgressStore();
-      _hasPremiumAccess = _adFreeService.status.isAdFree;
-      _adFreeService.addListener(_handlePremiumChanged);
       unawaited(_loadPositionProgress());
     }
     _drills = widget.topic.getDrillsForSubtopic(widget.subtopic);
@@ -235,6 +241,12 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     unawaited(_loadBookmarks());
     _loadEngineProfile();
     _loadDrillAt(0, reason: 'initial open');
+    if (widget.resumeActiveOnOpen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        unawaited(_restoreActiveDrillFromStore());
+      });
+    }
   }
 
   @override
@@ -247,16 +259,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
         (_isPositionMode ? PositionFenRepository() : null);
     _positionProgressStore = widget.positionProgressStore ??
         (_isPositionMode ? const PositionProgressStore() : null);
-    if (oldWidget.adFreeService != widget.adFreeService) {
-      if (oldWidget.positionCategory != null) {
-        _adFreeService.removeListener(_handlePremiumChanged);
-      }
-      _adFreeService = widget.adFreeService ?? AdFreeService.instance;
-      if (_isPositionMode) {
-        _adFreeService.addListener(_handlePremiumChanged);
-      }
-    }
-
     if (!routeIdentityChanged) {
       _totalPositions = widget.totalPositions ?? _totalPositions;
       _currentPositionCompleted =
@@ -277,6 +279,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     }
 
     _gameEngine?.dispose();
+    _activeDrillSnapshotPaused = widget.resumeActiveOnOpen;
     _currentPositionIndex = _resolvedPositionIndex;
     _totalPositions = widget.totalPositions ?? 1;
     _currentPositionCompleted = widget.initialPositionCompleted;
@@ -286,6 +289,12 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
       unawaited(_loadPositionProgress());
     }
     _loadDrillAt(0, reason: 'route/source identity changed');
+    if (widget.resumeActiveOnOpen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        unawaited(_restoreActiveDrillFromStore());
+      });
+    }
   }
 
   int get _resolvedPositionIndex {
@@ -313,29 +322,27 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_saveActiveDrillSnapshot(force: true));
     SystemChrome.setPreferredOrientations(const [
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    if (_isPositionMode) {
-      _adFreeService.removeListener(_handlePremiumChanged);
-    }
     _gameEngine?.dispose();
     super.dispose();
   }
 
-  void _handlePremiumChanged() {
-    if (!mounted) return;
-    setState(() {
-      _hasPremiumAccess = _adFreeService.status.isAdFree;
-    });
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      unawaited(_saveActiveDrillSnapshot(force: true));
+    }
   }
 
   Future<void> _loadPositionProgress() async {
     final category = widget.positionCategory;
     final store = _positionProgressStore;
     final positionIndex = _currentPositionIndex;
-    final totalPositions = _totalPositions;
     if (category == null || store == null) return;
 
     final progress = await store.snapshot(category);
@@ -346,8 +353,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
       return;
     }
     setState(() {
-      _highestUnlockedIndex =
-          progress.highestUnlockedIndex.clamp(1, totalPositions).toInt();
       _currentPositionCompleted = progress.isCompleted(positionIndex);
     });
   }
@@ -362,6 +367,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
       prefs.getString(EnginePowerProfile.preferencesKey),
     );
     if (!mounted) return;
+    if (_activeDrillWasRestored) return;
 
     setState(() {
       _engineProfile = savedProfile;
@@ -431,6 +437,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_isCurrentEngine(engine, gameToken)) return;
       engine?.start();
+      unawaited(_saveActiveDrillSnapshot(force: true));
       _emitDebugSnapshot();
     });
   }
@@ -468,6 +475,21 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
       engineMoveProvider: widget.engineMoveProvider,
     );
 
+    _attachEngineCallbacks(engine, gameToken);
+
+    _gameEngine = engine;
+    _activeDrillStartedAt = DateTime.now();
+    _lastActiveDrillSnapshotWriteAt = null;
+    _activeDrillWasRestored = false;
+    _debugLog(
+      'initialized game token=$gameToken reason=$reason '
+      'category=${widget.positionCategory?.id ?? widget.topic.id} '
+      'position=$_currentPositionIndex fen=${_fenFingerprint(initialFen)}',
+    );
+    _emitDebugSnapshot();
+  }
+
+  void _attachEngineCallbacks(PlayVsEngine engine, int gameToken) {
     engine.onBoardUpdate = (board, state) {
       if (!_isCurrentEngine(engine, gameToken)) return;
       setState(() {
@@ -479,6 +501,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
         _activeBookmark = _findBookmarkForFen(board.toFen());
       });
       _emitDebugSnapshot();
+      unawaited(_saveActiveDrillSnapshot(force: true));
     };
 
     engine.onMoveMade = (moveUci) {
@@ -499,6 +522,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
         }
       });
       _emitDebugSnapshot();
+      unawaited(_saveActiveDrillSnapshot(force: true));
       _playSoundForLatestMove(engine);
     };
 
@@ -517,14 +541,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
         unawaited(_finishGameResult(result, engine, gameToken));
       });
     };
-
-    _gameEngine = engine;
-    _debugLog(
-      'initialized game token=$gameToken reason=$reason '
-      'category=${widget.positionCategory?.id ?? widget.topic.id} '
-      'position=$_currentPositionIndex fen=${_fenFingerprint(initialFen)}',
-    );
-    _emitDebugSnapshot();
   }
 
   Future<void> _finishGameResult(
@@ -535,6 +551,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     if (!_isCurrentEngine(engine, gameToken)) return;
     await _markPositionCompletedIfNeeded(result, engine, gameToken);
     if (!_isCurrentEngine(engine, gameToken)) return;
+    await _activeDrillStore.clear();
     await _showPostGameResultDialog();
   }
 
@@ -546,7 +563,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     final category = widget.positionCategory;
     final store = _positionProgressStore;
     final positionIndex = _currentPositionIndex;
-    final totalPositions = _totalPositions;
     if (category == null || store == null) return;
     if (!_userWonByCheckmate(result)) return;
 
@@ -559,10 +575,132 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
       return;
     }
     setState(() {
-      _highestUnlockedIndex =
-          progress.highestUnlockedIndex.clamp(1, totalPositions).toInt();
       _currentPositionCompleted = progress.isCompleted(positionIndex);
     });
+  }
+
+  Future<void> _restoreActiveDrillFromStore() async {
+    final category = widget.positionCategory;
+    if (category == null) {
+      _activeDrillSnapshotPaused = false;
+      return;
+    }
+
+    final snapshot = await _activeDrillStore.load();
+    if (!mounted) return;
+    if (snapshot == null ||
+        snapshot.category != category ||
+        snapshot.positionIndex != _currentPositionIndex) {
+      _activeDrillSnapshotPaused = false;
+      await _saveActiveDrillSnapshot(force: true);
+      return;
+    }
+
+    _restoreActiveDrill(snapshot);
+  }
+
+  void _restoreActiveDrill(ActiveDrillSnapshot snapshot) {
+    final board = ChessBoard.tryFromFen(snapshot.currentFen);
+    if (board == null) {
+      _activeDrillSnapshotPaused = false;
+      unawaited(_activeDrillStore.clear());
+      return;
+    }
+
+    _gameEngine?.dispose();
+    final profile = EnginePowerProfile.fromId(snapshot.engineProfileId);
+    final gameToken = ++_gameToken;
+    final game = PlayVsEngine.restored(
+      startingFen: snapshot.startingFen,
+      currentFen: snapshot.currentFen,
+      moves: snapshot.moves,
+      userColor: snapshot.userColor,
+      engineProfile: profile,
+      engineMoveProvider: widget.engineMoveProvider,
+    );
+    _attachEngineCallbacks(game, gameToken);
+    _activeDrillWasRestored = true;
+
+    final lastMove = snapshot.moves.isEmpty ? null : snapshot.moves.last.move;
+    setState(() {
+      _gameEngine = game;
+      _activeDrillStartedAt = snapshot.startedAt;
+      _lastActiveDrillSnapshotWriteAt = null;
+      _engineProfile = profile;
+      _initialFen = snapshot.startingFen;
+      _userColor = snapshot.userColor;
+      _playBoard = board;
+      _boardFlipped = snapshot.boardFlipped;
+      _selectedSquare = null;
+      _legalMoves = const [];
+      _lastMoveFrom = lastMove == null || lastMove.length < 4
+          ? null
+          : lastMove.substring(0, 2);
+      _lastMoveTo = lastMove == null || lastMove.length < 4
+          ? null
+          : lastMove.substring(2, 4);
+      _extraHighlights = const [];
+      _checkSquare = _computeCheckSquare(board, playSound: false);
+      _engineThinking = game.state == PlayState.engineThinking;
+      _isGameOver = false;
+      _resultDialogVisible = false;
+      _leaveDialogVisible = false;
+      _leavingDrill = false;
+      _engineErrorVisible = game.engineError;
+      _fenErrorMessage = null;
+      _activeBookmark = _findBookmarkForFen(board.toFen());
+      _gameResult = null;
+    });
+
+    _activeDrillSnapshotPaused = false;
+    _debugLog(
+      'restored active drill token=$gameToken '
+      'category=${snapshot.category.id} position=${snapshot.positionIndex}',
+    );
+    _emitDebugSnapshot();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_isCurrentEngine(game, gameToken)) return;
+      game.resumeRestored();
+      unawaited(_saveActiveDrillSnapshot(force: true));
+    });
+  }
+
+  Future<void> _saveActiveDrillSnapshot({bool force = false}) async {
+    final category = widget.positionCategory;
+    final engine = _gameEngine;
+    if (category == null ||
+        engine == null ||
+        _activeDrillSnapshotPaused ||
+        _fenErrorMessage != null ||
+        _isGameOver ||
+        engine.isGameOver) {
+      return;
+    }
+
+    final now = DateTime.now();
+    if (!force &&
+        _lastActiveDrillSnapshotWriteAt != null &&
+        now.difference(_lastActiveDrillSnapshotWriteAt!) <
+            const Duration(milliseconds: 900)) {
+      return;
+    }
+    _lastActiveDrillSnapshotWriteAt = now;
+
+    await _activeDrillStore.save(
+      ActiveDrillSnapshot(
+        startedAt: _activeDrillStartedAt ?? now,
+        updatedAt: now,
+        category: category,
+        positionIndex: _currentPositionIndex,
+        startingFen: _initialFen,
+        currentFen: engine.board.toFen(),
+        userColor: _userColor,
+        engineProfileId: _engineProfile.id,
+        boardFlipped: _boardFlipped,
+        moves: engine.moves,
+      ),
+    );
   }
 
   bool _userWonByCheckmate(GameEndResult result) {
@@ -653,7 +791,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
       title: isCompletedPosition ? 'Leave completed drill?' : 'Leave drill?',
       message: isCompletedPosition
           ? 'Your completion is already saved. Leaving will not change your progress.'
-          : 'Your current attempt will be lost. This position will not be marked complete unless you checkmate the engine.',
+          : 'Your current attempt will stay available from Home. This position will not be marked complete unless you checkmate the engine.',
       cancelLabel: 'Cancel',
       confirmLabel: isCompletedPosition ? 'Leave' : 'Leave Drill',
       icon: Icons.exit_to_app_rounded,
@@ -666,6 +804,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
   void _leaveActiveDrill() {
     if (_leavingDrill) return;
     _leavingDrill = true;
+    unawaited(_saveActiveDrillSnapshot(force: true));
     _gameEngine?.dispose();
     _backToTraining();
   }
@@ -693,6 +832,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
       _engineProfile = profile;
     });
     _gameEngine?.setEngineProfile(profile);
+    unawaited(_saveActiveDrillSnapshot(force: true));
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(EnginePowerProfile.preferencesKey, profile.id);
@@ -846,14 +986,26 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     );
     setState(() {});
     _gameEngine?.start();
+    unawaited(_saveActiveDrillSnapshot(force: true));
     _emitDebugSnapshot();
+  }
+
+  Future<void> _confirmResetCurrentDrill() async {
+    final shouldReset = await ConfirmLeaveDialog.show(
+      context,
+      title: 'Reset drill?',
+      message: 'This will restart the current drill and clear this attempt.',
+      cancelLabel: 'Cancel',
+      confirmLabel: 'Reset',
+      icon: Icons.replay_rounded,
+    );
+    if (!mounted || !shouldReset) return;
+    _startCurrentDrillAgain();
   }
 
   bool get _canOpenNext {
     if (_isPositionMode) {
-      if (_currentPositionIndex >= _totalPositions) return false;
-      if (_hasPremiumAccess) return true;
-      return _highestUnlockedIndex >= _currentPositionIndex + 1;
+      return _currentPositionIndex < _totalPositions;
     }
     return _currentDrillIndex < _drills.length - 1;
   }
@@ -887,7 +1039,7 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     if (!_canOpenNext) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Complete this position to unlock the next one.'),
+          content: const Text('Position not found.'),
           behavior: SnackBarBehavior.floating,
           backgroundColor: DesignSystem.backgroundElevated,
           shape: RoundedRectangleBorder(
@@ -1238,9 +1390,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AdFreeCompactStatusLine(
-          padding: EdgeInsets.only(bottom: 8),
-        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -1351,12 +1500,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
   }
 
   Widget _buildDrillControls({bool compact = false}) {
-    final hasNext = _canOpenNext;
-    final nextLabel = _isPositionMode
-        ? (_loadingNextPosition ? 'Loading' : 'Next')
-        : (hasNext ? 'Next' : 'Summary');
-    final nextEnabled =
-        _isPositionMode ? hasNext && !_loadingNextPosition : true;
     return Semantics(
       label: 'Drill controls',
       container: true,
@@ -1380,12 +1523,15 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
               _DrillControlButton(
                 label: 'Reset',
                 icon: Icons.replay_rounded,
-                onPressed: _startCurrentDrillAgain,
+                onPressed: () => unawaited(_confirmResetCurrentDrill()),
               ),
               _DrillControlButton(
                 label: 'Flip',
                 icon: Icons.flip_rounded,
-                onPressed: () => setState(() => _boardFlipped = !_boardFlipped),
+                onPressed: () {
+                  setState(() => _boardFlipped = !_boardFlipped);
+                  unawaited(_saveActiveDrillSnapshot(force: true));
+                },
               ),
               _DrillControlButton(
                 label: _activeBookmark == null ? 'Bookmark' : 'Saved',
@@ -1399,13 +1545,6 @@ class _DrillDetailBaseScreenState extends State<DrillDetailBaseScreen> {
                 label: 'Resign',
                 icon: Icons.flag_rounded,
                 onPressed: _isGameOver ? null : _resign,
-              ),
-              _DrillControlButton(
-                label: nextLabel,
-                icon: hasNext
-                    ? Icons.arrow_forward_rounded
-                    : Icons.fact_check_rounded,
-                onPressed: nextEnabled ? () => unawaited(_nextDrill()) : null,
               ),
             ],
           ),
@@ -2076,7 +2215,6 @@ class _PostGameResultDialog extends StatelessWidget {
                       icon: Icons.arrow_back_rounded,
                       label: 'Back',
                       onPressed: () => onAction(_PostGameAction.back),
-                      muted: true,
                     ),
                   ],
                 ),
@@ -2141,7 +2279,7 @@ class _PositionCompletionLine extends StatelessWidget {
             Expanded(
               child: Text(
                 completed
-                    ? 'Position completed\nNext position unlocked'
+                    ? 'Position completed\nProgress saved'
                     : 'Position not completed. Checkmate is required.',
                 style: TextStyle(
                   color: color,
@@ -2162,20 +2300,15 @@ class _DialogActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onPressed;
-  final bool muted;
 
   const _DialogActionButton({
     required this.icon,
     required this.label,
     required this.onPressed,
-    this.muted = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final foreground =
-        muted ? DesignSystem.textMuted : DesignSystem.textPrimary;
-
     return SizedBox(
       width: double.infinity,
       height: 48,
@@ -2184,10 +2317,8 @@ class _DialogActionButton extends StatelessWidget {
         icon: Icon(icon, size: 19),
         label: Text(label),
         style: OutlinedButton.styleFrom(
-          foregroundColor: foreground,
-          side: BorderSide(
-            color: muted ? DesignSystem.border : DesignSystem.borderFocus,
-          ),
+          foregroundColor: DesignSystem.textPrimary,
+          side: const BorderSide(color: DesignSystem.borderFocus),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

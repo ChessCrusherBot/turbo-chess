@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-Turbo Chess is prepared for GPLv3/open-source release from an engineering perspective. This file summarizes bundled third-party code and assets. It is not legal advice or a legal guarantee.
+This file summarizes bundled third-party code and assets for Turbo Chess. It is not legal advice or a legal guarantee.
 
 ## Stockfish
 
@@ -47,6 +47,25 @@ Turbo Chess selects the BSD license option offered on the Wikimedia Commons file
 
 Turbo Chess uses renamed copies of selected click MP3 files for move, capture, check, and checkmate sounds.
 
+## Position/FEN Files
+
+- Asset type: Opening, middlegame, and endgame FEN position files
+- Included in the app/source package:
+  - `assets/positions/opening_positions.txt`
+  - `assets/positions/middlegame_positions.txt`
+  - `assets/positions/endgame_positions.txt`
+- Source documentation: `tools/position_factory/README.md`
+
+Turbo Chess includes bundled FEN training positions derived from Lichess open database material for offline chess practice. Lichess publishes its standard open database exports under CC0. Turbo Chess does not use Lichess broadcast games.
+
+## Turbo Chess Branding
+
+- Asset type: Turbo Chess launcher/app icon
+- Local asset: `assets/branding/turbo_chess_launcher_icon.png`
+- Launcher icon generation: `flutter_launcher_icons` configuration in `pubspec.yaml`
+
+The launcher icon is treated as a Turbo Chess project branding asset. No endorsement by any third party is implied.
+
 ## Font Awesome Free / font_awesome_flutter
 
 - Asset type: Icon font/glyphs and Flutter package
@@ -56,6 +75,14 @@ Turbo Chess uses renamed copies of selected click MP3 files for move, capture, c
 - `font_awesome_flutter` package license: MIT
 
 Only Font Awesome Free icons are used. No Font Awesome Pro icons or private icon files are bundled.
+
+## Google Fonts / google_fonts
+
+- Package: `google_fonts`
+- Font requested by app theme: Inter
+- App code: `lib/app/theme.dart`
+
+Turbo Chess uses the `google_fonts` package for Inter text styles. The runtime font fetching path is disabled in app startup, and the Android release manifest currently does not request the `INTERNET` permission.
 
 ## Flutter and Dart Dependencies
 
@@ -68,10 +95,7 @@ Direct dependencies currently declared in `pubspec.yaml` include:
 - `intl`
 - `google_fonts`
 - `audioplayers`
-- `google_mobile_ads`
 - `flutter_svg`
-- `in_app_purchase`
-- `url_launcher`
 - `font_awesome_flutter`
 
 Development dependencies include:
@@ -80,8 +104,16 @@ Development dependencies include:
 - `flutter_lints`
 - `flutter_launcher_icons`
 
-Before a public source release, generate or review dependency license information from the package metadata if a formal dependency license report is required.
+Android Gradle dependencies currently declared in `android/app/build.gradle.kts` include:
 
-## Unknown or Follow-Up Licenses
+- `com.google.android.play:core`
+- `androidx.multidex:multidex`
 
-No additional bundled third-party asset licenses were identified during this engineering pass. Re-run a dependency and asset license audit before each public release.
+Package license details are available from the package metadata.
+
+## Additional Notes
+
+- FEN source documentation is available in `tools/position_factory/README.md`.
+- Turbo Chess launcher icon is treated as a project branding asset.
+- Google Fonts runtime fetching is disabled; the app does not request Android `INTERNET` permission in release.
+- This notice is a source summary and not legal advice or a legal guarantee.

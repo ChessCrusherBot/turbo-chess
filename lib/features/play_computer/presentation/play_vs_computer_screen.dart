@@ -123,11 +123,13 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
     with WidgetsBindingObserver {
   static const Color _boardLight = Color(0xFFE6D8BD);
   static const Color _boardDark = Color(0xFF5E7C66);
+  static const double _setupStickyFooterReserveHeight = 112;
   static const int _maxPowerDepth = 20;
   static const int _maxPowerMoveTimeMs = 3000;
   static const int _maxPowerSkillLevel = 20;
   static const int _maxPowerThreads = 2;
   static const int _maxPowerHashMb = 64;
+  static const Duration _historyWarningDuration = Duration(seconds: 2);
 
   final TextEditingController _fenController = TextEditingController();
   final PlayComputerHistoryStore _historyStore =
@@ -196,6 +198,8 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
   DateTime? _lastSnapshotWriteAt;
   PlayComputerGameRecord? _lastSavedRecord;
   Future<PlayComputerGameRecord?>? _finishGameFuture;
+  Timer? _historyWarningTimer;
+  bool _showHistoryWarning = false;
 
   bool get _hasActiveGame {
     final game = _game;
@@ -241,6 +245,7 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
     WidgetsBinding.instance.removeObserver(this);
     unawaited(_saveActiveGameSnapshot());
     _clockTimer?.cancel();
+    _historyWarningTimer?.cancel();
     _game?.dispose();
     _fenController.dispose();
     super.dispose();
@@ -668,6 +673,20 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
     _startGame();
   }
 
+  Future<void> _confirmResetGame() async {
+    final shouldReset = await ConfirmLeaveDialog.show(
+      context,
+      title: 'Reset game?',
+      message:
+          'This will restart the current game and clear the current moves.',
+      cancelLabel: 'Cancel',
+      confirmLabel: 'Reset',
+      icon: Icons.replay_rounded,
+    );
+    if (!mounted || !shouldReset) return;
+    _resetGame();
+  }
+
   void _newGame() {
     _game?.dispose();
     _clockTimer?.cancel();
@@ -1042,7 +1061,21 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
   }
 
   Future<void> _openHistory() async {
+    if (_hasActiveGame) {
+      _showActiveGameHistoryWarning();
+      return;
+    }
     await Navigator.pushNamed(context, '/play/history');
+  }
+
+  void _showActiveGameHistoryWarning() {
+    _historyWarningTimer?.cancel();
+    if (!mounted) return;
+    setState(() => _showHistoryWarning = true);
+    _historyWarningTimer = Timer(_historyWarningDuration, () {
+      if (!mounted) return;
+      setState(() => _showHistoryWarning = false);
+    });
   }
 
   @override
@@ -1091,77 +1124,109 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
   }
 
   Widget _buildSetup() {
-    return ListView(
-      key: const ValueKey('play_setup_list'),
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+    return Stack(
       children: [
-        _Section(
-          title: 'Color',
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _choiceChip('White', PlayerColorChoice.white),
-              _choiceChip('Black', PlayerColorChoice.black),
-              _choiceChip('Random', PlayerColorChoice.random),
-            ],
+        ListView(
+          key: const ValueKey('play_setup_list'),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(
+            20,
+            8,
+            20,
+            _setupStickyFooterReserveHeight,
           ),
-        ),
-        const SizedBox(height: 12),
-        _Section(
-          title: 'Time Control',
-          child: _buildTimeControlSelector(),
-        ),
-        const SizedBox(height: 12),
-        _Section(
-          title: 'Start Position',
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SwitchListTile.adaptive(
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Paste FEN'),
-                subtitle: Text(
-                  _pastedSideToMove == null
-                      ? 'Normal starting position is used when off.'
-                      : '${_sideLabel(_pastedSideToMove!)} to move',
-                ),
-                value: _usePastedFen,
-                onChanged: (value) {
-                  setState(() => _usePastedFen = value);
-                  _validateFenInput();
-                },
+          children: [
+            _Section(
+              title: 'Color',
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  _choiceChip('White', PlayerColorChoice.white),
+                  _choiceChip('Black', PlayerColorChoice.black),
+                  _choiceChip('Random', PlayerColorChoice.random),
+                ],
               ),
-              if (_usePastedFen) ...[
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _fenController,
-                  minLines: 2,
-                  maxLines: 3,
-                  onChanged: (_) => _validateFenInput(),
-                  decoration: InputDecoration(
-                    hintText: ChessBoard.standardStartingFen,
-                    errorText: _fenError,
-                    border: const OutlineInputBorder(),
+            ),
+            const SizedBox(height: 12),
+            _Section(
+              title: 'Time Control',
+              child: _buildTimeControlSelector(),
+            ),
+            const SizedBox(height: 12),
+            _Section(
+              title: 'Start Position',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SwitchListTile.adaptive(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Paste FEN'),
+                    subtitle: Text(
+                      _pastedSideToMove == null
+                          ? 'Normal starting position is used when off.'
+                          : '${_sideLabel(_pastedSideToMove!)} to move',
+                    ),
+                    value: _usePastedFen,
+                    onChanged: (value) {
+                      setState(() => _usePastedFen = value);
+                      _validateFenInput();
+                    },
                   ),
-                ),
-              ],
-            ],
-          ),
+                  if (_usePastedFen) ...[
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _fenController,
+                      minLines: 2,
+                      maxLines: 3,
+                      onChanged: (_) => _validateFenInput(),
+                      decoration: InputDecoration(
+                        hintText: ChessBoard.standardStartingFen,
+                        errorText: _fenError,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            _Section(title: 'Engine', child: _buildEngineSettings()),
+            const SizedBox(height: 12),
+            _Section(title: 'Helpers', child: _buildHelperToggles()),
+          ],
         ),
-        const SizedBox(height: 12),
-        _Section(title: 'Engine', child: _buildEngineSettings()),
-        const SizedBox(height: 12),
-        _Section(title: 'Helpers', child: _buildHelperToggles()),
-        const SizedBox(height: 18),
-        FilledButton.icon(
-          key: const ValueKey('start_computer_game'),
-          onPressed: _startGame,
-          icon: const Icon(Icons.play_arrow_rounded),
-          label: const Text('Start Game'),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: _buildSetupStickyFooter(),
         ),
       ],
+    );
+  }
+
+  Widget _buildSetupStickyFooter() {
+    return DecoratedBox(
+      key: const ValueKey('play_setup_sticky_footer'),
+      decoration: BoxDecoration(
+        color: DesignSystem.backgroundBase.withAlpha(244),
+        border: const Border(
+          top: BorderSide(color: DesignSystem.border),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+        child: SizedBox(
+          height: 52,
+          child: FilledButton.icon(
+            key: const ValueKey('start_computer_game'),
+            onPressed: _startGame,
+            icon: const Icon(Icons.play_arrow_rounded),
+            label: const Text('Start Game'),
+          ),
+        ),
+      ),
     );
   }
 
@@ -1460,21 +1525,37 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
             showEvaluation: _showEvaluation,
             centipawns: _evaluationCp,
             boardBuilder: (boardSize) {
-              return ChessBoardWidget(
-                key: const ValueKey('play_chess_board_area'),
-                board: _board,
-                size: boardSize,
-                onTapSquare: (square) => unawaited(_onTapSquare(square)),
-                selectedSquare: _selectedSquare,
-                legalMoves: _showLegalMoves ? _legalMoves : const [],
-                lastMoveFrom: _showLastMove ? _lastMoveFrom : null,
-                lastMoveTo: _showLastMove ? _lastMoveTo : null,
-                suggestedMoveFrom: suggestionFrom,
-                suggestedMoveTo: suggestionTo,
-                checkSquare: _checkSquare,
-                flipped: _boardFlipped,
-                lightSquare: _boardLight,
-                darkSquare: _boardDark,
+              return Stack(
+                children: [
+                  ChessBoardWidget(
+                    key: const ValueKey('play_chess_board_area'),
+                    board: _board,
+                    size: boardSize,
+                    onTapSquare: (square) => unawaited(_onTapSquare(square)),
+                    selectedSquare: _selectedSquare,
+                    legalMoves: _showLegalMoves ? _legalMoves : const [],
+                    lastMoveFrom: _showLastMove ? _lastMoveFrom : null,
+                    lastMoveTo: _showLastMove ? _lastMoveTo : null,
+                    suggestedMoveFrom: suggestionFrom,
+                    suggestedMoveTo: suggestionTo,
+                    checkSquare: _checkSquare,
+                    flipped: _boardFlipped,
+                    lightSquare: _boardLight,
+                    darkSquare: _boardDark,
+                  ),
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 160),
+                        switchInCurve: Curves.easeOut,
+                        switchOutCurve: Curves.easeIn,
+                        child: _showHistoryWarning
+                            ? const _HistoryBlockedOverlay()
+                            : const SizedBox.shrink(),
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -1493,7 +1574,11 @@ class _PlayVsComputerScreenState extends State<PlayVsComputerScreen>
                 unawaited(_saveActiveGameSnapshot(force: true));
               },
             ),
-            _controlButton('Reset', Icons.replay_rounded, _resetGame),
+            _controlButton(
+              'Reset',
+              Icons.replay_rounded,
+              () => unawaited(_confirmResetGame()),
+            ),
             _controlButton('Resign', Icons.flag_rounded,
                 _gameOver ? null : () => unawaited(_resign())),
             _controlButton('New', Icons.add_rounded, _newGame),
@@ -2047,6 +2132,41 @@ class _EvaluationRail extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HistoryBlockedOverlay extends StatelessWidget {
+  const _HistoryBlockedOverlay();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ConstrainedBox(
+        key: const ValueKey('play_history_blocked_overlay'),
+        constraints: const BoxConstraints(maxWidth: 320),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: DesignSystem.backgroundElevated.withAlpha(238),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: DesignSystem.borderFocus),
+            boxShadow: DesignSystem.shadowLg,
+          ),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Text(
+              'Finish or resign the current game to view history.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: DesignSystem.textPrimary,
+                fontSize: 13,
+                height: 1.25,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

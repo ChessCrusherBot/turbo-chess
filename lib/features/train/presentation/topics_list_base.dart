@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/ads/ad_free_status_widgets.dart';
 import '../../../core/ads/ad_shell.dart';
 import '../../../core/design/turbo_icons.dart';
 import '../../../core/design_system.dart';
@@ -102,9 +101,6 @@ class _TopicsListBaseScreenState extends State<TopicsListBaseScreen> {
                       : null,
                 ),
               ),
-            ),
-            const AdFreeCompactStatusLine(
-              padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
             ),
             Padding(
               padding: const EdgeInsets.all(20),

@@ -1,31 +1,40 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:turbo_chess/core/ads/ad_shell.dart';
 
 void main() {
-  test('no entitlement means banners can show when ads are enabled', () {
-    expect(
-      AdBannerPolicy.shouldShowBanners(
-        screenVisible: true,
-        adsRuntimeEnabled: true,
-        isAdFree: false,
+  testWidgets('screen frame returns child without ad UI', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AdScreenFrame(
+            isVisible: true,
+            child: Text('Training board'),
+          ),
+        ),
       ),
-      isTrue,
     );
+
+    expect(find.text('Training board'), findsOneWidget);
+    expect(find.byType(AdBannerSlot), findsNothing);
   });
 
-  test('ad-free entitlement hides top and bottom banner slots', () {
-    final topBannerVisible = AdBannerPolicy.shouldShowBanners(
-      screenVisible: true,
-      adsRuntimeEnabled: true,
-      isAdFree: true,
-    );
-    final bottomBannerVisible = AdBannerPolicy.shouldShowBanners(
-      screenVisible: true,
-      adsRuntimeEnabled: true,
-      isAdFree: true,
+  testWidgets('legacy banner slot renders no visible content', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AdBannerSlot(placement: AdBannerPlacement.bottom),
+        ),
+      ),
     );
 
-    expect(topBannerVisible, isFalse);
-    expect(bottomBannerVisible, isFalse);
+    expect(find.byType(AdBannerSlot), findsOneWidget);
+    expect(find.byType(SizedBox), findsOneWidget);
+    expect(tester.getSize(find.byType(SizedBox)), Size.zero);
+  });
+
+  test('banner policy never enables banners in version 1', () {
+    expect(AdBannerPolicy.shouldShowBanners(screenVisible: true), isFalse);
+    expect(AdBannerPolicy.shouldShowBanners(screenVisible: false), isFalse);
   });
 }

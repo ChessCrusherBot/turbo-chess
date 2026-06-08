@@ -73,12 +73,14 @@ void main() {
     expect(game.state, PlayState.idle);
   });
 
-  testWidgets('go to next position opens position 2 with fresh FEN identity', (
+  testWidgets(
+      'completion dialog next position opens position 2 with fresh FEN identity',
+      (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
     await _setSurface(tester, const Size(430, 900));
-    const fen1 = '8/8/8/4k3/8/4K3/4P3/8 w - - 0 1';
+    const fen1 = '7k/8/5KQ1/8/8/8/8/8 w - - 0 1';
     const fen2 = '8/8/8/3k4/8/3K4/3P4/8 w - - 0 1';
     final repo = PositionFenRepository(
       bundle: _FakePositionAssetBundle({
@@ -117,8 +119,16 @@ void main() {
     expect(find.text('Endgame Position 1'), findsOneWidget);
     var board = tester.widget<ChessBoardWidget>(find.byType(ChessBoardWidget));
     expect(board.board.toFen(), fen1);
+    expect(find.text('Next'), findsNothing);
 
-    await tester.tap(find.text('Next'));
+    await _tapBoardSquare(tester, 'g6');
+    await _tapBoardSquare(tester, 'g7');
+    await tester.pumpAndSettle();
+
+    expect(find.text('Position completed'), findsOneWidget);
+    expect(find.text('Next Position'), findsOneWidget);
+
+    await tester.tap(find.text('Next Position'));
     await tester.pumpAndSettle();
 
     expect(find.text('Endgame Position 2'), findsOneWidget);

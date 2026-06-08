@@ -96,7 +96,6 @@ enum TurboIconKind {
   settings,
   help,
   premium,
-  adFree,
   generic,
 }
 
@@ -368,6 +367,9 @@ class TurboIconBadge extends StatelessWidget {
 }
 
 class TurboBrandMarkBadge extends StatelessWidget {
+  static const String launcherIconAsset =
+      'assets/branding/turbo_chess_launcher_icon.png';
+
   final double size;
 
   const TurboBrandMarkBadge({
@@ -377,6 +379,10 @@ class TurboBrandMarkBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(
+      (size * 0.32).clamp(14, 18).toDouble(),
+    );
+
     return Container(
       width: size,
       height: size,
@@ -389,8 +395,7 @@ class TurboBrandMarkBadge extends StatelessWidget {
             Color(0xFF081018),
           ],
         ),
-        borderRadius:
-            BorderRadius.circular((size * 0.32).clamp(14, 18).toDouble()),
+        borderRadius: radius,
         border: Border.all(color: DesignSystem.secondary.withAlpha(76)),
         boxShadow: [
           BoxShadow(
@@ -401,11 +406,17 @@ class TurboBrandMarkBadge extends StatelessWidget {
         ],
       ),
       alignment: Alignment.center,
-      child: TurboIcon(
-        kind: TurboIconKind.brand,
-        color: DesignSystem.secondaryLight,
-        secondaryColor: const Color(0xFFFFF0B8),
-        size: size * 0.62,
+      child: ClipRRect(
+        borderRadius: radius,
+        child: Image.asset(
+          launcherIconAsset,
+          key: const ValueKey('home_turbo_chess_launcher_icon'),
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.high,
+          semanticLabel: 'Turbo Chess app icon',
+        ),
       ),
     );
   }
@@ -602,10 +613,6 @@ class _TurboIconPainter extends CustomPainter {
         break;
       case TurboIconKind.premium:
         _drawCrown(canvas, 16, 17, 1, solid, stroke);
-        break;
-      case TurboIconKind.adFree:
-        _drawShield(canvas, stroke, thin, soft);
-        _drawLine(canvas, const Offset(10, 22), const Offset(22, 10), stroke);
         break;
       case TurboIconKind.generic:
         _drawGeneric(canvas, stroke, thin, solid);

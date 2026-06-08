@@ -52,6 +52,50 @@ void main() {
     expect(find.text('Skill: 20'), findsOneWidget);
   });
 
+  testWidgets('setup start game button stays fixed while options scroll', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      const MaterialApp(home: PlayVsComputerScreen()),
+    );
+    await tester.pump();
+
+    final startButton = find.byKey(const ValueKey('start_computer_game'));
+    final footer = find.byKey(const ValueKey('play_setup_sticky_footer'));
+    final setupList = find.byKey(const ValueKey('play_setup_list'));
+
+    expect(startButton, findsOneWidget);
+    expect(footer, findsOneWidget);
+
+    final initialButtonTop = tester.getTopLeft(startButton).dy;
+    final initialFooterRect = _globalRect(tester, footer);
+
+    await tester.drag(setupList, const Offset(0, -700));
+    await tester.pumpAndSettle();
+
+    expect(tester.getTopLeft(startButton).dy, closeTo(initialButtonTop, 1));
+    expect(_globalRect(tester, footer).top, closeTo(initialFooterRect.top, 1));
+
+    await tester.scrollUntilVisible(
+      find.text('Move feedback'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    final footerRect = _globalRect(tester, footer);
+    final moveFeedbackRect = _globalRect(tester, find.text('Move feedback'));
+    expect(moveFeedbackRect.bottom, lessThanOrEqualTo(footerRect.top + 1));
+    expect(tester.getTopLeft(startButton).dy, closeTo(initialButtonTop, 1));
+  });
+
   testWidgets('color selection works', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(home: PlayVsComputerScreen()),
@@ -367,6 +411,69 @@ void main() {
     expect(find.text('Finished games will appear here.'), findsOneWidget);
   });
 
+  testWidgets('history icon shows centered board overlay during unfinished game',
+      (tester) async {
+    var historyOpened = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        onGenerateRoute: (settings) {
+          if (settings.name == '/play/history') {
+            historyOpened = true;
+            return MaterialPageRoute<void>(
+              builder: (_) => const Scaffold(body: Text('History route')),
+            );
+          }
+          return null;
+        },
+        home: const PlayVsComputerScreen(),
+      ),
+    );
+
+    await _startComputerGame(tester);
+    expect(find.text('White to move'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('play_history_button')));
+    await tester.pump();
+
+    expect(
+      find.text('Finish or resign the current game to view history.'),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('play_history_blocked_overlay')),
+      findsOneWidget,
+    );
+    expect(find.byType(SnackBar), findsNothing);
+    expect(historyOpened, isFalse);
+    expect(find.text('History route'), findsNothing);
+    expect(find.text('White to move'), findsOneWidget);
+
+    final boardCenter =
+        tester.getCenter(find.byKey(const ValueKey('play_chess_board_area')));
+    final overlayCenter = tester
+        .getCenter(find.byKey(const ValueKey('play_history_blocked_overlay')));
+    expect((overlayCenter.dx - boardCenter.dx).abs(), lessThan(1));
+    expect((overlayCenter.dy - boardCenter.dy).abs(), lessThan(1));
+
+    await tester.tap(find.byKey(const ValueKey('play_history_button')));
+    await tester.pump();
+    expect(
+      find.byKey(const ValueKey('play_history_blocked_overlay')),
+      findsOneWidget,
+    );
+
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(
+      find.byKey(const ValueKey('play_history_blocked_overlay')),
+      findsNothing,
+    );
+    expect(
+      find.text('Finish or resign the current game to view history.'),
+      findsNothing,
+    );
+  });
+
   testWidgets('paste FEN validates side to move', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(home: PlayVsComputerScreen()),
@@ -414,7 +521,12 @@ void main() {
   ) async {
     const fen = '8/8/8/4k3/8/4K3/4P3/8 w - - 0 1';
     await tester.pumpWidget(
-      const MaterialApp(home: PlayVsComputerScreen(initialFen: fen)),
+      MaterialApp(
+        home: PlayVsComputerScreen(
+          initialFen: fen,
+          engineMoveProvider: (_, __, ___) async => null,
+        ),
+      ),
     );
     await tester.pump();
     await tester.pumpAndSettle();
@@ -429,6 +541,10 @@ void main() {
     );
     await tester.tap(find.text('Reset'));
     await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Reset game?'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Reset'));
     await tester.pumpAndSettle();
 
     board = tester.widget<ChessBoardWidget>(find.byType(ChessBoardWidget));
@@ -743,7 +859,53 @@ void main() {
     await tester.tap(find.text('Reset'));
     await tester.pumpAndSettle();
 
+    expect(find.text('Reset game?'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Reset'));
+    await tester.pumpAndSettle();
+
     expect(soundService.debugSoundPlayCount, 0);
+  });
+
+  testWidgets('Play vs Computer reset Cancel keeps current board', (
+    tester,
+  ) async {
+    const fen = '8/8/8/4k3/8/4K3/4P3/8 w - - 0 1';
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayVsComputerScreen(
+          initialFen: fen,
+          engineMoveProvider: (_, __, ___) async => null,
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    await _tapBoardSquare(tester, 'e3');
+    await _tapBoardSquare(tester, 'd3');
+    await tester.pumpAndSettle();
+    final movedFen = tester
+        .widget<ChessBoardWidget>(find.byType(ChessBoardWidget))
+        .board
+        .toFen();
+    expect(movedFen, isNot(fen));
+
+    await tester.scrollUntilVisible(
+      find.text('Reset'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Reset'));
+    await tester.pumpAndSettle();
+    expect(find.text('Reset game?'), findsOneWidget);
+
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    final board =
+        tester.widget<ChessBoardWidget>(find.byType(ChessBoardWidget));
+    expect(board.board.toFen(), movedFen);
   });
 
   testWidgets('invalid initial FEN does not silently start from normal board', (

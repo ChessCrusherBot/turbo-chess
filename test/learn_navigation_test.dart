@@ -36,12 +36,17 @@ void main() {
 
     await tester.tap(find.text('More'));
     await tester.pumpAndSettle();
-    expect(find.text('Premium Status'), findsOneWidget);
-    expect(find.text('Ad-free access'), findsNothing);
-    expect(find.text('Free access'), findsOneWidget);
-    expect(find.text('Ads active'), findsOneWidget);
+    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('How to Play'), findsOneWidget);
+    expect(find.text('Legal'), findsOneWidget);
+    expect(find.text('About'), findsOneWidget);
 
     for (final forbidden in <String>[
+      'Access Status',
+      'Ads active',
+      'Rewarded Pass',
+      'Watch rewarded ad',
+      'Subscribe',
       'Game Review',
       'XP',
       'Streak',

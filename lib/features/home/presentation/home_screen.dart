@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/ads/ad_free_status_widgets.dart';
 import '../../../core/ads/ad_shell.dart';
 import '../../../core/design/turbo_icons.dart';
 import '../../../core/design_system.dart';
@@ -8,6 +7,7 @@ import '../../../core/positions/position_category.dart';
 import '../../../core/positions/position_progress_store.dart';
 import '../../../core/ui/turbo_chess_icons.dart';
 import '../../play_computer/presentation/active_play_computer_resume_card.dart';
+import '../../train/presentation/active_drill_resume_card.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isVisible;
@@ -123,23 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        const AdFreeCompactStatusLine(
-                          padding: EdgeInsets.only(top: 12),
-                        ),
                         const ActivePlayComputerResumeCard(
                           padding: EdgeInsets.only(top: 14),
                         ),
+                        const ActiveDrillResumeCard(
+                          padding: EdgeInsets.only(top: 10),
+                        ),
                       ],
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-                    child: AdBannerSlot(
-                      key: const ValueKey('home_safe_top_banner_slot'),
-                      placement: AdBannerPlacement.top,
-                      isVisible: widget.isVisible,
                     ),
                   ),
                 ),

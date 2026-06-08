@@ -134,7 +134,7 @@ class PositionProgressStore {
     required int highestUnlockedIndex,
     required bool hasPremiumAccess,
   }) {
-    return hasPremiumAccess || positionIndex <= highestUnlockedIndex;
+    return _isValidIndex(positionIndex);
   }
 
   Set<int> _readCompletedIndexes(

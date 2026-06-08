@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/ads/ad_free_status_widgets.dart';
 import '../../../core/ads/ad_shell.dart';
 import '../../../core/design_system.dart';
 import '../../../core/positions/position_category.dart';
@@ -70,9 +69,6 @@ class _TrainScreenState extends State<TrainScreen> {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           children: [
             const SizedBox(height: 12),
-            const AdFreeCompactStatusLine(
-              padding: EdgeInsets.only(bottom: 16),
-            ),
             const ActivePlayComputerResumeCard(
               padding: EdgeInsets.only(bottom: 14),
             ),

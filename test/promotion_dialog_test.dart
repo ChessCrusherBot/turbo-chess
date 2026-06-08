@@ -42,6 +42,27 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('promotion dialog stays compact on a small phone', (
+    tester,
+  ) async {
+    await _setSurface(tester, const Size(320, 480));
+    await _pumpPromotionButton(tester, PieceColor.white);
+
+    await tester.tap(find.text('Open promotion'));
+    await tester.pumpAndSettle();
+
+    final dialogRect = tester.getRect(
+      find.byKey(const ValueKey('promotion_dialog_card')),
+    );
+    expect(dialogRect.width, lessThanOrEqualTo(330));
+    expect(dialogRect.height, lessThan(300));
+    expect(find.text('Queen'), findsOneWidget);
+    expect(find.text('Rook'), findsOneWidget);
+    expect(find.text('Bishop'), findsOneWidget);
+    expect(find.text('Knight'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('selecting each promotion option returns the right code', (
     tester,
   ) async {

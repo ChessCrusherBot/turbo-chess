@@ -28,13 +28,14 @@ class PromotionDialog extends StatelessWidget {
     return SafeArea(
       child: Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 430),
+          key: const ValueKey('promotion_dialog_card'),
+          constraints: const BoxConstraints(maxWidth: 330),
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: DesignSystem.backgroundRaised,
-              borderRadius: BorderRadius.circular(26),
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(color: accent.withAlpha(95)),
               boxShadow: [
                 ...DesignSystem.shadowLg,
@@ -46,7 +47,7 @@ class PromotionDialog extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,48 +55,45 @@ class PromotionDialog extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        width: 38,
-                        height: 38,
+                        width: 32,
+                        height: 32,
                         decoration: BoxDecoration(
                           color: accent.withAlpha(22),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(11),
                           border: Border.all(color: accent.withAlpha(78)),
                         ),
                         child: Icon(
                           Icons.upgrade_rounded,
                           color: accent,
-                          size: 21,
+                          size: 18,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 10),
                       const Expanded(
                         child: Text(
                           'Promote pawn',
                           style: TextStyle(
                             color: DesignSystem.textPrimary,
-                            fontSize: 19,
+                            fontSize: 16,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 3),
                   const Text(
                     'Choose a piece',
                     style: TextStyle(
                       color: DesignSystem.textMuted,
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 12),
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      final compact = constraints.maxWidth < 350;
-                      final tileWidth = compact
-                          ? (constraints.maxWidth - 10) / 2
-                          : (constraints.maxWidth - 30) / 4;
+                      final tileWidth = (constraints.maxWidth - 10) / 2;
                       return Wrap(
                         spacing: 10,
                         runSpacing: 10,
@@ -114,7 +112,7 @@ class PromotionDialog extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -181,49 +179,55 @@ class _PromotionTile extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: DesignSystem.backgroundElevated,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(color: accent.withAlpha(72)),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: tileBackground,
-                      borderRadius: BorderRadius.circular(13),
-                      border: Border.all(
-                        color: color == PieceColor.white
-                            ? Colors.white.withAlpha(46)
-                            : const Color(0xFF8A6C3F).withAlpha(120),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+            child: SizedBox(
+              height: 46,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 38,
+                    height: 38,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: tileBackground,
+                        borderRadius: BorderRadius.circular(11),
+                        border: Border.all(
+                          color: color == PieceColor.white
+                              ? Colors.white.withAlpha(46)
+                              : const Color(0xFF8A6C3F).withAlpha(120),
+                        ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(6),
-                      child: SvgPicture.asset(
-                        ChessPieceAssets.assetForFenChar(fen),
-                        fit: BoxFit.contain,
-                        semanticsLabel:
-                            '${color == PieceColor.white ? 'White' : 'Black'} ${option.label}',
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: SvgPicture.asset(
+                          ChessPieceAssets.assetForFenChar(fen),
+                          fit: BoxFit.contain,
+                          semanticsLabel:
+                              '${color == PieceColor.white ? 'White' : 'Black'} ${option.label}',
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 7),
-                Text(
-                  option.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: DesignSystem.textPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      option.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: DesignSystem.textPrimary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

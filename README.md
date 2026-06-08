@@ -43,7 +43,7 @@ flutter build appbundle --release
 
 ## Android Release Notes
 
-Play Store signing/configuration must be provided privately by the developer. Do not publish signing keys, keystore passwords, Play Console credentials, AdMob account details, service account JSON files, or private API keys.
+Play Store signing/configuration must be provided privately by the developer. Do not publish signing keys, keystore passwords, Play Console credentials, service account JSON files, developer payment/tax records, or private API keys.
 
 The public source release should include the app source needed to build Turbo Chess, including Flutter/Dart source, Android project files, `pubspec.yaml`, `pubspec.lock`, tests, third-party notices, and Stockfish source/build metadata. Private secrets and signing credentials must remain outside the public repository.
 
@@ -56,8 +56,7 @@ Never commit:
 - private signing keys or keystore files
 - `android/key.properties` or `android/keystore.properties`
 - Play Console service account JSON files
-- AdMob account secrets
-- bank/payment details
+- developer payment/tax records
 - `.env` files
 - private API keys
 
