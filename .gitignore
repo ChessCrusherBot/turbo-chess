@@ -59,6 +59,8 @@ migrate_working_dir/
 /two_player_current.xml
 /window_dump_*.xml
 /screenshots/
+/release_readiness/
+/tools/piece_preview/
 /.qwen/
 /binding_lib.json
 /navigator_lib.json

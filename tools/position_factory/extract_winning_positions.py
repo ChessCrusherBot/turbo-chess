@@ -74,10 +74,7 @@ DIFFICULTY_LABELS = {
 DATABASE_INDEX_URL = "https://database.lichess.org/standard/"
 STANDARD_FILE_RE = re.compile(r"lichess_db_standard_rated_(\d{4}-\d{2})\.pgn\.zst$")
 EVAL_COMMENT_RE = re.compile(r"\[%eval\s+([#]?-?\d+(?:\.\d+)?)\]")
-STOCKFISH_DEFAULT = Path(
-    r"C:\Users\lenovo\Desktop\CHESS_DRILL_FORGE\stockfish"
-    r"\stockfish-windows-x86-64-avx2.exe"
-)
+STOCKFISH_DEFAULT = None
 
 
 @dataclasses.dataclass(frozen=True)

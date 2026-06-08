@@ -55,7 +55,7 @@ Optional engine verification requires a Stockfish executable:
 ```powershell
 python tools/position_factory/extract_winning_positions.py `
   --check-environment `
-  --stockfish C:\path\to\stockfish.exe
+  --stockfish <STOCKFISH_EXECUTABLE>
 ```
 
 ## Preflight Before Large Processing
@@ -69,7 +69,7 @@ Get-PSDrive -PSProvider FileSystem
 Get-Command stockfish -ErrorAction SilentlyContinue
 ```
 
-If Stockfish is not on `PATH`, pass `--stockfish C:\path\to\stockfish.exe`.
+If Stockfish is not on `PATH`, pass `--stockfish <STOCKFISH_EXECUTABLE>`.
 
 ## Extraction Commands
 
@@ -77,8 +77,8 @@ Dry run against one downloaded Lichess month:
 
 ```powershell
 python tools/position_factory/extract_winning_positions.py `
-  --pgn-zst D:\lichess\lichess_db_standard_rated_2026-01.pgn.zst `
-  --stockfish C:\path\to\stockfish.exe `
+  --pgn-zst <LICHESS_DATA>\lichess_db_standard_rated_2026-01.pgn.zst `
+  --stockfish <STOCKFISH_EXECUTABLE> `
   --dry-run `
   --max-games 50000
 ```
@@ -87,10 +87,10 @@ Full export target:
 
 ```powershell
 python tools/position_factory/extract_winning_positions.py `
-  --pgn-zst D:\lichess\lichess_db_standard_rated_2026-01.pgn.zst `
-            D:\lichess\lichess_db_standard_rated_2025-12.pgn.zst `
-            D:\lichess\lichess_db_standard_rated_2025-11.pgn.zst `
-  --stockfish C:\path\to\stockfish.exe `
+  --pgn-zst <LICHESS_DATA>\lichess_db_standard_rated_2026-01.pgn.zst `
+            <LICHESS_DATA>\lichess_db_standard_rated_2025-12.pgn.zst `
+            <LICHESS_DATA>\lichess_db_standard_rated_2025-11.pgn.zst `
+  --stockfish <STOCKFISH_EXECUTABLE> `
   --output-dir assets/positions `
   --target-per-band 2000
 ```
@@ -103,7 +103,7 @@ Optional evaluated-position supplement:
 
 ```powershell
 python tools/position_factory/extract_winning_positions.py `
-  --eval-jsonl-zst D:\lichess\lichess_db_eval.jsonl.zst `
+  --eval-jsonl-zst <LICHESS_DATA>\lichess_db_eval.jsonl.zst `
   --output-dir assets/positions `
   --target-per-band 2000
 ```

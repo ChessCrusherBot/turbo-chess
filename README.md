@@ -4,7 +4,7 @@ Turbo Chess is a Flutter Android chess training app with 30,000 offline drill po
 
 ## Overview
 
-Turbo Chess is built for focused chess practice on Android. It includes bundled Opening, Middlegame, and Endgame training positions, a Play vs Computer mode powered by Stockfish, game replay, bookmarks, local history, and local progress tracking.
+Turbo Chess is built for focused chess practice on Android. It includes bundled Opening, Middlegame, and Endgame training positions, Play vs Computer mode powered by Stockfish, game replay, bookmarks, local history, and local progress tracking.
 
 The app is currently free, ad-free, offline-focused, and local-only.
 
@@ -15,13 +15,13 @@ Public source repository: https://github.com/ChessCrusherBot/turbo-chess
 * 30,000 bundled chess drill positions
 * Opening, Middlegame, and Endgame training
 * Play vs Computer using Stockfish
-* Game Replay for completed games
+* Game replay for completed games
 * Bookmarks, history, settings, and progress stored locally on the device
 * Android-first Flutter/Dart codebase
 
 ## Offline and privacy behavior
 
-Turbo Chess v1 does not use login accounts, analytics, crash reporting, cloud sync, subscriptions, in-app purchases, Google Play Billing, or active AdMob.
+Turbo Chess v1 does not use login accounts, analytics, crash reporting, cloud sync, subscriptions, in-app purchases, Google Play Billing, or an ad SDK.
 
 The Android release app does not request the `INTERNET` permission. Training content, progress, bookmarks, settings, and game history are local to the device.
 
@@ -31,7 +31,7 @@ Turbo Chess source code is released under the GNU General Public License version
 
 Third-party notices are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-The Android app also bundles legal text assets under `assets/legal/` so users can view practical license and source information from the installed app.
+The Android app also includes practical legal/source information in More → Legal.
 
 ## Stockfish
 
@@ -46,7 +46,6 @@ Bundled Android Stockfish binaries are stored in:
 Recorded Stockfish source and build information is available in:
 
 * `assets/stockfish/STOCKFISH_SOURCE.txt`
-* `lib/core/engine/BUILDING_STOCKFISH.md`
 * `assets/legal/STOCKFISH_SOURCE.txt`
 * `assets/legal/STOCKFISH_BUILDING.md`
 

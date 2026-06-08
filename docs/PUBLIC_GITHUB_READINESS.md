@@ -1,38 +1,38 @@
-# Turbo Chess Public GitHub Readiness
+# Public GitHub Source Readiness
 
-This document summarizes the public repository readiness state for Turbo Chess v1. It is a public-facing source release note and does not contain secret values.
+This document summarizes the public source-release state for Turbo Chess.
 
-## Repository status
+## Public repository
 
-- Public repository: `https://github.com/ChessCrusherBot/turbo-chess`
-- Main branch: `main`
-- Git remote: `https://github.com/ChessCrusherBot/turbo-chess.git`
-- Source license: GNU General Public License version 3
+* Repository: `https://github.com/ChessCrusherBot/turbo-chess`
+* Default branch: `main`
+* Package ID: `com.turbochess.app`
+* Source license: GNU General Public License version 3
 
 ## Current app state
 
-- Turbo Chess v1 is free and ad-free.
-- The Android release app is offline-focused and does not request the `INTERNET` permission.
-- No login, accounts, analytics, crash reporting, cloud sync, subscriptions, in-app purchases, Google Play Billing, active AdMob, or rewarded ads are part of the current Android release app.
-- Bookmarks, settings, progress, and game history are stored locally on the device.
-- More -> Legal contains the public source link: `https://github.com/ChessCrusherBot/turbo-chess`
+Turbo Chess v1 is a Flutter/Dart Android chess training app with 30,000 bundled offline drill positions. Opening, Middlegame, and Endgame drills are included, and Play vs Computer uses Stockfish.
 
-## Security and private files
+The current Android release is free, ad-free, offline-focused, and local-only. It does not use login accounts, analytics, crash reporting, cloud sync, subscriptions, in-app purchases, Google Play Billing, rewarded ads, or an ad SDK.
 
-This public repository intentionally does not include Android signing keys, keystore files, local machine configuration, Play Console credentials, environment files, private API keys, or private developer account records.
+The Android release app does not request the `INTERNET` permission. Bookmarks, settings, progress, active games, and game history are stored locally on the device.
 
-Release signing files, local Android configuration, generated build outputs, and local tool caches are excluded from version control. Contributors and maintainers should use targeted staging commands and review `git status --short` before committing public documentation or source updates.
+More -> Legal includes the public source repository link.
 
-## GPLv3 and Stockfish
+## Private files excluded from source
 
-Turbo Chess includes Stockfish under GPLv3, so the project keeps GPLv3 license text, Stockfish source metadata, Stockfish build notes, and third-party notices in the repository.
+The public repository intentionally excludes Android signing keys, keystore files, local machine configuration, Play Console credentials, environment files, private API keys, and private developer account records.
 
-Stockfish source availability and GPLv3 obligations remain a release responsibility whenever distributing public app binaries.
+Generated build outputs, APK/AAB artifacts, local tool caches, and private release packages are also excluded from version control.
 
-## Recommended public repository checks
+## Source/license notes
 
-- Confirm public documentation matches the current free, ad-free, offline app state.
-- Confirm sensitive signing and account files remain excluded from version control.
-- Confirm generated APK, AAB, and release output files are not tracked.
-- Confirm third-party notices and Stockfish source/build metadata remain available.
-- Confirm More -> Legal continues to show the GitHub source link for distributed releases.
+Turbo Chess source code is released under GPLv3 because the Android app includes Stockfish, which is GPLv3 licensed.
+
+The repository keeps GPLv3 license text, third-party notices, Stockfish source metadata, and Stockfish build notes available for source users.
+
+Stockfish source availability remains a release responsibility whenever public app binaries are distributed.
+
+## Maintainer checks
+
+Maintainers should verify the tracked file list, public documentation, third-party notices, Stockfish source/build metadata, Android release permissions, and private-file exclusions whenever preparing a public release.

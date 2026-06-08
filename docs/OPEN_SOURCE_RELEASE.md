@@ -1,72 +1,51 @@
-# Turbo Chess Open-Source Release Notes
+# Open Source Release Notes
 
-## Purpose
+This document summarizes the public source package for Turbo Chess v1.
 
-Turbo Chess is released as GPLv3 open source because the project includes Stockfish, which is GPLv3 licensed.
+## Source license
 
-This document summarizes the public source package and related release responsibilities.
+Turbo Chess source code is released under the GNU General Public License version 3. The full license text is available in the root `LICENSE` and `COPYING` files.
 
-## Public source materials
+## Stockfish
 
-The public repository includes:
+Turbo Chess includes Stockfish, which is licensed under GPLv3.
 
-- Flutter/Dart source code
-- Android project files needed to build the app
-- `pubspec.yaml` and `pubspec.lock`
-- tests
-- third-party notices
-- GPLv3 license text
-- Stockfish source and build metadata
-- build instructions
+Recorded Stockfish source information:
 
-## Security and private files
+* Source URL: https://github.com/official-stockfish/Stockfish
+* Version: Stockfish 18
+* Tag: `sf_18`
+* Commit: `cb3d4ee9b47d0c5aae855b12379378ea1439675c`
 
-This public repository intentionally does not include Android signing keys, keystore files, local machine configuration, Play Console credentials, environment files, private API keys, or private developer account records.
+Bundled Android Stockfish binary paths used by the app:
 
-Release signing and local configuration remain private to each developer or release environment.
-
-## Current app state
-
-The current Turbo Chess Android release is free, ad-free, offline-focused, and local-only. It does not include an ad SDK, active AdMob, rewarded ads, subscriptions, in-app purchases, account/login systems, analytics, crash reporting, cloud sync, in-app payments, or Google Play Billing.
-
-The Android release app does not request the `INTERNET` permission.
-
-## Stockfish details
-
-Turbo Chess bundles these Stockfish binaries:
-
-- `android/app/src/main/jniLibs/arm64-v8a/libstockfish.so`
-- `android/app/src/main/jniLibs/armeabi-v7a/libstockfish.so`
-- `android/app/src/main/jniLibs/x86_64/libstockfish.so`
-
-Recorded source information:
-
-- Source URL: https://github.com/official-stockfish/Stockfish
-- Version: Stockfish 18
-- Tag: `sf_18`
-- Commit: `cb3d4ee9b47d0c5aae855b12379378ea1439675c`
-- Build notes: `lib/core/engine/BUILDING_STOCKFISH.md`
-- Bundled legal mirror: `assets/legal/STOCKFISH_SOURCE.txt`
+* `android/app/src/main/jniLibs/arm64-v8a/libstockfish.so`
+* `android/app/src/main/jniLibs/armeabi-v7a/libstockfish.so`
+* `android/app/src/main/jniLibs/x86_64/libstockfish.so`
 
 No Stockfish source modifications are included in this repository. The project metadata records the intended upstream version. Binary equivalence cannot be proven from the binary alone.
 
-## Release maintenance notes
+## Third-party notices
 
-Maintainers should review source availability, GPLv3 obligations, third-party notices, Android permissions, and Play Console Data Safety answers whenever distributing a public app binary.
+Third-party code and asset notices are documented in:
 
-If app behavior changes in a future version, this document and the public README should be updated to match the released app.
+* `THIRD_PARTY_NOTICES.md`
+* `assets/legal/THIRD_PARTY_NOTICES.md`
+* `assets/legal/`
+* `assets/stockfish/`
+* `assets/pieces/cburnett_bsd/`
+* `assets/sounds/chess/`
 
-## Suggested verification checks
+## Current app state
 
-- `flutter pub get`
-- `flutter analyze`
-- `flutter test`
-- debug APK build
-- release APK build
-- split ABI release APK build
-- release AAB build
-- archive inspection for Stockfish binaries
-- archive inspection for legal files
-- More > Legal smoke test
-- secret scan
-- confirm GitHub source is public when shipping a corresponding Play Store release
+Turbo Chess v1 is free, ad-free, offline-focused, and local-only. It does not use login accounts, analytics, crash reporting, cloud sync, subscriptions, in-app purchases, Google Play Billing, rewarded ads, or an ad SDK.
+
+The Android release app does not request the `INTERNET` permission.
+
+## Source availability notes
+
+The public repository includes the Flutter/Dart app source, Android project files, bundled training position files, tests, third-party notices, GPLv3 license text, and Stockfish source/build metadata.
+
+Release signing files, local configuration, Play Console credentials, APK/AAB outputs, and private developer records are excluded from source control.
+
+Maintainers should re-check source availability, GPLv3 obligations, third-party notices, Android release permissions, and Play Console declarations whenever distributing public app binaries.
