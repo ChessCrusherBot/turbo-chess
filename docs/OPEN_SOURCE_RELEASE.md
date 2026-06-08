@@ -2,50 +2,36 @@
 
 ## Purpose
 
-Turbo Chess is being prepared for GPLv3/open-source release because it bundles Stockfish, which is GPLv3 licensed.
+Turbo Chess is released as GPLv3 open source because the project includes Stockfish, which is GPLv3 licensed.
 
-This document is practical engineering guidance only. It is not legal advice and does not guarantee legal compliance.
+This document summarizes the public source package and related release responsibilities.
 
-## What Must Be Public
+## Public source materials
 
-A public source release should include:
+The public repository includes:
 
 - Flutter/Dart source code
-- Android source/configuration needed to build the app
+- Android project files needed to build the app
 - `pubspec.yaml` and `pubspec.lock`
 - tests
 - third-party notices
-- root GPLv3 license file
-- Stockfish source and build information
+- GPLv3 license text
+- Stockfish source and build metadata
 - build instructions
 
-## What Must Not Be Public
+## Security and private files
 
-Do not publish:
+This public repository intentionally does not include Android signing keys, keystore files, local machine configuration, Play Console credentials, environment files, private API keys, or private developer account records.
 
-- keystore files
-- keystore passwords
-- `android/key.properties`
-- `android/keystore.properties`
-- Play Console service account JSON files
-- `google-services.json` until it has been reviewed carefully
-- `.env` files
-- Play Console private credentials
-- developer payment/tax records
-- private API keys
+Release signing and local configuration remain private to each developer or release environment.
 
-## How To Publish Later
+## Current app state
 
-1. Review `git status`.
-2. Run a secret scan manually.
-3. Ensure `.gitignore` protects private files.
-4. Create a public GitHub repository.
-5. Push only safe files.
-6. Tag releases matching Play Store versions.
-7. Include APK/AAB source correspondence notes.
-8. Keep signing keys and private configs outside the repo.
+The current Turbo Chess Android release is free, ad-free, offline-focused, and local-only. It does not include an ad SDK, active AdMob, rewarded ads, subscriptions, in-app purchases, account/login systems, analytics, crash reporting, cloud sync, in-app payments, or Google Play Billing.
 
-## Stockfish Details
+The Android release app does not request the `INTERNET` permission.
+
+## Stockfish details
 
 Turbo Chess bundles these Stockfish binaries:
 
@@ -64,15 +50,13 @@ Recorded source information:
 
 No Stockfish source modifications are included in this repository. The project metadata records the intended upstream version. Binary equivalence cannot be proven from the binary alone.
 
-## Play Store Note
+## Release maintenance notes
 
-The current Turbo Chess Android release is intended to be free, ad-free, offline, and local-only. It does not include an ad SDK, account/login system, analytics, cloud sync, in-app payments, or Google Play Billing.
+Maintainers should review source availability, GPLv3 obligations, third-party notices, Android permissions, and Play Console Data Safety answers whenever distributing a public app binary.
 
-Public source release does not mean private signing credentials are public. Do not publish signing keys, Play Console credentials, service account JSON files, developer payment/tax records, or private API keys.
+If app behavior changes in a future version, this document and the public README should be updated to match the released app.
 
-If ads, payments, subscriptions, analytics, login, or cloud sync are ever added later, update the source release notes, app legal/privacy text, Android permissions, dependency notices, and Play Console Data Safety answers before release.
-
-## Pre-Release Checklist
+## Suggested verification checks
 
 - `flutter pub get`
 - `flutter analyze`
