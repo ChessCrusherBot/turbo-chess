@@ -1,7 +1,0 @@
-﻿*.md text eol=lf
-*.txt text eol=lf
-README.md text eol=lf
-NOTICE.md text eol=lf
-THIRD_PARTY_NOTICES.md text eol=lf
-COPYING text eol=lf
-LICENSE text eol=lf
