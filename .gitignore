@@ -123,3 +123,9 @@ android/app/src/main/jniLibs/*/libstockfish.so
 PROJECT_HANDOFF_FOR_CHATGPT.md
 SUBSCRIPTION_REMOVAL_AND_REWARDED_PASS_REPORT.md
 git_status_now.txt
+
+# Local release/planning artifacts
+/release_readiness/
+/docs/play_store/
+/docs/source_release/
+/tools/piece_preview/
