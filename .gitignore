@@ -118,3 +118,8 @@ google-services-private.json
 
 # Large local Stockfish binaries - keep private/local, do not push to GitHub
 android/app/src/main/jniLibs/*/libstockfish.so
+
+# Local private report files
+PROJECT_HANDOFF_FOR_CHATGPT.md
+SUBSCRIPTION_REMOVAL_AND_REWARDED_PASS_REPORT.md
+git_status_now.txt
